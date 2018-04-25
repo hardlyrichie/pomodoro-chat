@@ -1,5 +1,18 @@
 extends layout
 
 block content
-  h1= title
-  p Welcome to #{title}
+  form(action="")
+    h2 Choose your nickname:
+    label(for="nickname") Nickname:
+    input(type="text", name="nickname" id="nickname")
+    input(type="submit" value="Enter")
+  
+  .lobby
+    .userlist
+      h3 Users Online
+      ul
+    
+    .rooms
+      h3 Rooms
+
+  script(src="/javascripts/index.js")
