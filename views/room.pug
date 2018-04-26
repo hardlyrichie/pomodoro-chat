@@ -1,0 +1,10 @@
+extends layout
+
+block content
+  script.
+    socket.emit('join room', "#{name}");
+
+  h1= title
+
+  script(src="/javascripts/room.js")
+
