@@ -8,7 +8,6 @@
     "compile:sass": "node-sass public/stylesheets/sass/main.scss public/stylesheets/style.css -w"
   },
   "dependencies": {
-    "client-sessions": "^0.8.0",
     "cookie-parser": "~1.4.3",
     "debug": "~2.6.9",
     "express": "~4.16.0",
