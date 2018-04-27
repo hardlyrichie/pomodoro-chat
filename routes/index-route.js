@@ -4,13 +4,12 @@ module.exports = function(app, io) {
   var router = express.Router();
 
   var users = {};
+  // room { name: name, { users: [] } }
   var rooms = {};
 
   app.set('rooms', rooms);
 
   io.on('connection', function(socket) { 
-      console.log(socket.id, 'has connected');
-
       // Remember user's nickname and tell clients to update userlist
       socket.on('join', function(name) {
         console.log(`${socket.id} has chosen the nickname ${name}`);
@@ -34,16 +33,6 @@ module.exports = function(app, io) {
         delete users[socket.id];
         socket.broadcast.emit('get userlist', users);
       });
-
-      // Join room
-      socket.on('join room', function(id) {
-        socket.join(id);
-        console.log(socket.handshake.session.nickname + " has joined the room: " + id);
-      })
-
-      // Leave room
-
-      // Delete room
   });
 
   /* GET home page. */
@@ -56,7 +45,10 @@ module.exports = function(app, io) {
     // Create new room id and store room name
     var id = uuidv1();
     var name = req.body.room_name;
-    rooms[id] = name;
+    rooms[id] = { 
+      name,
+      users: []
+    };
 
     // Update all client's roomlist with new room
     io.emit('update roomlist', id, name);

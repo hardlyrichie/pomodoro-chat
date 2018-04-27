@@ -62,4 +62,8 @@ app.use(function(err, req, res, next) {
   res.render('error');
 });
 
+io.on('connection', function(socket) {
+  console.log(socket.id, 'has connected');
+});
+
 module.exports = app;
