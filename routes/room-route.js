@@ -26,7 +26,6 @@ module.exports = function(app, io) {
     })
 
     // Leave room
-    // PROBLEM: disconnecting is not disconnect from just the room but fired when disconenct from room and lobby
     socket.on('disconnecting', function() {
       if (!room) return;
 
