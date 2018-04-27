@@ -1,13 +1,3 @@
-// var express = require('express');
-// var router = express.Router();
-
-// /* GET room */
-// router.get('/:id', function(req, res) {
-//   res.render('room', { title: 'Title', id: req.params.id , name: req.query.name});
-// });
-
-// module.exports = router;
-
 module.exports = function(app, io) {
   var express = require('express');
   var router = express.Router();

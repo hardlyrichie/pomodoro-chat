@@ -6,9 +6,6 @@ var logger = require('morgan');
 var sassMiddleware = require('node-sass-middleware');
 var socket_io = require('socket.io');
 
-// var indexRouter = require('./routes/index-route');
-// var roomRouter = require('./routes/room-route');
-
 var app = express();
 
 var io = socket_io();
@@ -26,6 +23,7 @@ app.use(session);
 
 io.use(sharedsession(session)); 
 
+// ROUTES
 var indexRouter = require('./routes/index-route.js')(app, io);
 var roomRouter = require('./routes/room-route')(app, io);
 

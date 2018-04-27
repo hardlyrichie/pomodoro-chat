@@ -15,11 +15,6 @@ createRoom.onclick = function(event) {
   let createRoomForm = document.querySelector('.form--create-room');
   createRoomForm.style.display = 'block';
 
-  // Create room
-  // createRoomForm.onsubmit = function(event) {
-  //   socket.emit('create room', createRoomForm.querySelector('#room_name').value);
-  // };
-
   // Hide form when cancel
   let cancelFormButton = createRoomForm.querySelector('input[type="button"]');
   cancelFormButton.onclick = function(event) {
@@ -35,7 +30,7 @@ socket.on('get userlist', function(users) {
 
   for (let user in users) {
     let item = document.createElement('li');
-    item.textContent = users[user].name; 
+    item.textContent = users[user]; 
     userlist.append(item);
   }
 });
