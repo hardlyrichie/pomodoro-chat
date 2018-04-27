@@ -16,9 +16,9 @@ createRoom.onclick = function(event) {
   createRoomForm.style.display = 'block';
 
   // Create room
-  createRoomForm.onsubmit = function(event) {
-    socket.emit('create room', createRoomForm.querySelector('#room_name').value);
-  };
+  // createRoomForm.onsubmit = function(event) {
+  //   socket.emit('create room', createRoomForm.querySelector('#room_name').value);
+  // };
 
   // Hide form when cancel
   let cancelFormButton = createRoomForm.querySelector('input[type="button"]');
@@ -52,11 +52,11 @@ let roomlist = document.querySelector('.rooms ul');
 socket.on('get roomlist', function(rooms) {
   roomlist.innerHTML = '';
 
-  for (let room of rooms) {
-    roomlist.insertAdjacentHTML('beforeend', `<li><a href='/room/${room}'>${room}</a></li>`);
+  for (let room in rooms) {
+    roomlist.insertAdjacentHTML('beforeend', `<li><a href='/room/${room}'>${rooms[room]}</a></li>`);
   }
 });
 
-socket.on('update roomlist', function(name) {
-  roomlist.insertAdjacentHTML('beforeend', `<li><a href='/room/${name}'>${name}</a></li>`);
+socket.on('update roomlist', function(id, name) {
+  roomlist.insertAdjacentHTML('beforeend', `<li><a href='/room/${id}'>${name}</a></li>`);
 });

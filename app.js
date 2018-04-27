@@ -6,9 +6,8 @@ var logger = require('morgan');
 var sassMiddleware = require('node-sass-middleware');
 var socket_io = require('socket.io');
 
-var indexRouter = require('./routes/index-route');
-var usersRouter = require('./routes/users');
-var roomRouter = require('./routes/room-route');
+// var indexRouter = require('./routes/index-route');
+// var roomRouter = require('./routes/room-route');
 
 var app = express();
 
@@ -27,7 +26,8 @@ app.use(session);
 
 io.use(sharedsession(session)); 
 
-require('./io.js')(io);
+var indexRouter = require('./routes/index-route.js')(app, io);
+var roomRouter = require('./routes/room-route')(app, io);
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
@@ -46,7 +46,6 @@ app.use(sassMiddleware({
 app.use(express.static(path.join(__dirname, 'public')));
 
 app.use('/', indexRouter);
-app.use('/users', usersRouter);
 app.use('/room', roomRouter);
 
 // catch 404 and forward to error handler

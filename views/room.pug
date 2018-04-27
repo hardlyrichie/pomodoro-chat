@@ -2,9 +2,11 @@ extends layout
 
 block content
   script.
-    socket.emit('join room', "#{name}");
+    socket.emit('join room', "#{id}");
 
-  h1= title
+  h1= name
+
+  p Theafsdg
 
   script(src="/javascripts/room.js")
 
