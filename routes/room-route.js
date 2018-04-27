@@ -43,6 +43,7 @@ module.exports = function(app, io) {
         io.emit('delete room', roomId);
       } else {
         // Update room userlist that client is disconnecting
+        io.to(roomId).emit('delete room user', socket.handshake.session.nickname);
       } 
     });
   });
