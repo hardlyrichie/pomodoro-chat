@@ -26,23 +26,25 @@ module.exports = function(app, io) {
     })
 
     // Leave room
-    // socket.on('disconnecting', function() {
-    //   if (!room) return;
+    socket.on('disconnecting', function() {
+      if (!room) return;
 
-    //   // Remove from room list
-    //   let index = room.indexOf(socket.handshake.session.nickname);
-    //   if (index >= 0) {
-    //     room.users.splice(index, 1);
-    //   }
+      // Remove from room list
+      let index = room.users.indexOf(socket.handshake.session.nickname);
+      if (index >= 0) {
+        room.users.splice(index, 1);
+      }
 
-    //   // Delete room if all users left room
-    //   if (room.users.length < 1) {
-    //     delete app.get('rooms')[roomId];
-    //     io.emit
-    //   } else {
-    //     // Update room userlist that client is disconnecting
-    //   } 
-    // });
+      // Delete room if all users left room
+      if (room.users.length < 1) {
+        delete app.get('rooms')[roomId];
+
+        // Update all client's roomlist in lobby
+        io.emit('delete room', roomId);
+      } else {
+        // Update room userlist that client is disconnecting
+      } 
+    });
   });
 
   /* GET room */

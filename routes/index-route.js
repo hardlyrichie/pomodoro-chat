@@ -4,7 +4,7 @@ module.exports = function(app, io) {
   var router = express.Router();
 
   var users = {};
-  // room { name: name, { users: [] } }
+  // room { name: name, users: [] }
   var rooms = {};
 
   app.set('rooms', rooms);
@@ -30,6 +30,8 @@ module.exports = function(app, io) {
 
       // Delete user's nickname upon disconnect and tell clients to update userlist
       socket.on('disconnect', function() {
+        if (!users[socket.id]) return;
+        
         socket.broadcast.emit('delete user', users[socket.id]);
         delete users[socket.id];
       });

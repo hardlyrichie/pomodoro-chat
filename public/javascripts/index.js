@@ -47,7 +47,8 @@ socket.on('get userlist', function(users) {
 
   for (let user in users) {
     let item = document.createElement('li');
-    item.textContent = users[user]; 
+    item.textContent = users[user];
+    item.className = name;  
     userlist.append(item);
   }
 });
@@ -60,10 +61,10 @@ socket.on('update userlist', function(name) {
 });
 
 socket.on('delete user', function(name) {
-  console.log('Delete:' + name);
   let userItem = userlist.querySelector(`li[class=${name}]`);
-  console.log(userItem);
-  userItem.remove();
+  if (userItem) {
+    userItem.remove();    
+  }
 });
 
 // ----------ROOMLIST-------------
@@ -73,10 +74,17 @@ socket.on('get roomlist', function(rooms) {
   roomlist.innerHTML = '';
 
   for (let room in rooms) {
-    roomlist.insertAdjacentHTML('beforeend', `<li><a href='/room/${room}'>${rooms[room].name}</a></li>`);
+    roomlist.insertAdjacentHTML('beforeend', `<li class=${room}><a href='/room/${room}'>${rooms[room].name}</a></li>`);
   }
 });
 
 socket.on('update roomlist', function(id, name) {
-  roomlist.insertAdjacentHTML('beforeend', `<li><a href='/room/${id}'>${name}</a></li>`);
+  roomlist.insertAdjacentHTML('beforeend', `<li class=${id}><a href='/room/${id}'>${name}</a></li>`);
+});
+
+socket.on('delete room', function(id) {
+  let roomItem = roomlist.querySelector(`li[class=${id}]`);
+  if (roomItem) {
+    roomItem.remove();
+  }
 });
