@@ -30,8 +30,14 @@ module.exports = function(app, io) {
 
       // Delete user's nickname upon disconnect and tell clients to update userlist
       socket.on('disconnect', function() {
+        socket.broadcast.emit('delete user', users[socket.id]);
         delete users[socket.id];
-        socket.broadcast.emit('get userlist', users);
+      });
+
+      // Refresh userlist and roomlist
+      socket.on('refresh', function() {
+        socket.emit('get userlist', users);
+        socket.emit('get roomlist', rooms);
       });
   });
 

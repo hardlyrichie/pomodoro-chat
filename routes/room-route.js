@@ -1,12 +1,19 @@
+'use strict';
+
 module.exports = function(app, io) {
-  var express = require('express');
-  var router = express.Router();
+  let express = require('express');
+  let router = express.Router();
 
   io.on('connection', function(socket) {
+    let room, roomId;
+
     // Join room
     socket.on('join room', function(id) {
       socket.join(id);
-      var room = app.get('rooms')[id];
+      
+      roomId = id;
+      room = app.get('rooms')[id];
+      if (!room) return;
       room.users.push(socket.handshake.session.nickname);
 
       // Fill client's room userlist
@@ -19,13 +26,29 @@ module.exports = function(app, io) {
     })
 
     // Leave room
-    // TODO Check if all users leave room delete room
+    // socket.on('disconnecting', function() {
+    //   if (!room) return;
+
+    //   // Remove from room list
+    //   let index = room.indexOf(socket.handshake.session.nickname);
+    //   if (index >= 0) {
+    //     room.users.splice(index, 1);
+    //   }
+
+    //   // Delete room if all users left room
+    //   if (room.users.length < 1) {
+    //     delete app.get('rooms')[roomId];
+    //     io.emit
+    //   } else {
+    //     // Update room userlist that client is disconnecting
+    //   } 
+    // });
   });
 
   /* GET room */
   router.get('/:id', function(req, res) {
     // Access rooms object and get name at rooms[req.params.id].name
-    var name = app.get('rooms')[req.params.id].name;
+    let name = app.get('rooms')[req.params.id].name;
     res.render('room', { title: 'Title', id: req.params.id , name: name});
   });
 

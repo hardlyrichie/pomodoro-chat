@@ -32,6 +32,13 @@ createRoom.onclick = function(event) {
   }
 };
 
+// ------------Refresh--------------
+let refreshButton = document.querySelector('.button--refresh');
+
+refreshButton.onclick = function(event) {
+  socket.emit('refresh');
+}
+
 // ----------USERLIST------------
 let userlist = document.querySelector('.userlist ul');
 
@@ -47,8 +54,16 @@ socket.on('get userlist', function(users) {
 
 socket.on('update userlist', function(name) {
   let item = document.createElement('li');
-  item.textContent = name; 
+  item.textContent = name;
+  item.className = name; 
   userlist.append(item);
+});
+
+socket.on('delete user', function(name) {
+  console.log('Delete:' + name);
+  let userItem = userlist.querySelector(`li[class=${name}]`);
+  console.log(userItem);
+  userItem.remove();
 });
 
 // ----------ROOMLIST-------------
