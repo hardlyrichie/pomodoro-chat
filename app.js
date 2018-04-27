@@ -1,31 +1,33 @@
-var createError = require('http-errors');
-var express = require('express');
-var path = require('path');
-var cookieParser = require('cookie-parser');
-var logger = require('morgan');
-var sassMiddleware = require('node-sass-middleware');
-var socket_io = require('socket.io');
+'use strict';
 
-var app = express();
+let createError = require('http-errors');
+let express = require('express');
+let path = require('path');
+let cookieParser = require('cookie-parser');
+let logger = require('morgan');
+let sassMiddleware = require('node-sass-middleware');
+let socket_io = require('socket.io');
 
-var io = socket_io();
+let app = express();
+
+let io = socket_io();
 app.io = io;
 
 // express-session setup
-var session = require('express-session')({
+let session = require('express-session')({
   secret: 'some secret here',
   resave: false,
   saveUninitialized: true
 });
-var sharedsession = require('express-socket.io-session');
+let sharedsession = require('express-socket.io-session');
 
 app.use(session);
 
 io.use(sharedsession(session)); 
 
 // ROUTES
-var indexRouter = require('./routes/index-route.js')(app, io);
-var roomRouter = require('./routes/room-route')(app, io);
+let indexRouter = require('./routes/index-route.js')(app, io);
+let roomRouter = require('./routes/room-route')(app, io);
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));

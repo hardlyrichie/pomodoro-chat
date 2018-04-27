@@ -1,11 +1,13 @@
-module.exports = function(app, io) {
-  var express = require('express');
-  var uuidv1 = require('uuid/v1');
-  var router = express.Router();
+'use strict';
 
-  var users = {};
+module.exports = function(app, io) {
+  let express = require('express');
+  let uuidv1 = require('uuid/v1');
+  let router = express.Router();
+
+  let users = {};
   // room { name: name, users: [] }
-  var rooms = {};
+  let rooms = {};
 
   app.set('rooms', rooms);
 
@@ -31,9 +33,11 @@ module.exports = function(app, io) {
       // Delete user's nickname upon disconnect and tell clients to update userlist
       socket.on('disconnect', function() {
         if (!users[socket.id]) return;
-        
+
         socket.broadcast.emit('delete user', users[socket.id]);
         delete users[socket.id];
+
+        console.log(socket.handshake.session.nickname + " has left the lobby");
       });
 
       // Refresh userlist and roomlist
@@ -41,18 +45,22 @@ module.exports = function(app, io) {
         socket.emit('get userlist', users);
         socket.emit('get roomlist', rooms);
       });
+
+      socket.on('get nickname', function(callback) {
+        callback(socket.handshake.session.nickname);
+      });
   });
 
   /* GET home page. */
   router.get('/', function(req, res, next) {
-    res.render('index', { title: 'Study Chat' });
+    res.render('index', { title: 'Study Chat', nickname: req.session.nickname });
   });
 
   /* POST create room */
   router.post('/', function(req, res) {
     // Create new room id and store room name
-    var id = uuidv1();
-    var name = req.body.room_name;
+    let id = uuidv1();
+    let name = req.body.room_name;
     rooms[id] = { 
       name,
       users: []

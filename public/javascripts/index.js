@@ -4,12 +4,14 @@
 let nicknameForm = document.querySelector('.form--nickname');
 let nickname;
 
-nicknameForm.onsubmit = function(event) {
-  event.preventDefault();
-  nickname = document.querySelector('#nickname').value;
-  socket.emit('join', nickname);
-  this.remove();
-};
+if (nicknameForm) {
+  nicknameForm.onsubmit = function(event) {
+    event.preventDefault();
+    nickname = document.querySelector('#nickname').value;
+    socket.emit('join', nickname);
+    this.remove();
+  };
+}
 
 // ------------Create Room Form--------------
 let createRoom = document.querySelector('.button--create-room');
@@ -20,10 +22,15 @@ createRoom.onclick = function(event) {
   createRoomForm.style.display = 'block';
 
   // Default room name
+  let roomName = document.querySelector('#room_name');
   if (nickname) {
-    let roomName = document.querySelector('#room_name');
     roomName.value = `${nickname}'s room`;
+  } else {
+    socket.emit('get nickname', function(nickname) {
+      roomName.value = `${nickname}'s room`;
+    });
   }
+  
 
   // Hide form when cancel
   let cancelFormButton = createRoomForm.querySelector('input[type="button"]');

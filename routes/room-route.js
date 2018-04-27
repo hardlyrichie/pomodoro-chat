@@ -26,8 +26,11 @@ module.exports = function(app, io) {
     })
 
     // Leave room
+    // PROBLEM: disconnecting is not disconnect from just the room but fired when disconenct from room and lobby
     socket.on('disconnecting', function() {
       if (!room) return;
+
+      console.log(socket.handshake.session.nickname + " has left room " + room.name);
 
       // Remove from room list
       let index = room.users.indexOf(socket.handshake.session.nickname);
@@ -44,7 +47,7 @@ module.exports = function(app, io) {
       } else {
         // Update room userlist that client is disconnecting
         io.to(roomId).emit('delete room user', socket.handshake.session.nickname);
-      } 
+      }
     });
   });
 
