@@ -39,10 +39,25 @@ module.exports = function(app, io) {
 
       // Delete room if all users left room
       if (room.users.length < 1) {
-        delete app.get('rooms')[roomId];
 
-        // Update all client's roomlist in lobby
-        io.emit('delete room', roomId);
+        let refresh = new Promise(resolve => {
+          let shouldDelete;
+          // Wait one second to decide if user left the room or refreshed the page
+          setTimeout(() => room.users.length < 1 ? shouldDelete = true : shouldDelete = false, 1000);
+
+          resolve(shouldDelete);
+        });
+
+        refresh.then(shouldDelete => {
+          if (!shouldDelete) return;
+
+          
+          delete app.get('rooms')[roomId];
+
+          // Update all client's roomlist in lobby
+          io.emit('delete room', roomId)
+        });
+;
       } else {
         // Update room userlist that client is disconnecting
         io.to(roomId).emit('delete room user', socket.handshake.session.nickname);
@@ -52,9 +67,16 @@ module.exports = function(app, io) {
 
   /* GET room */
   router.get('/:id', function(req, res) {
-    // Access rooms object and get name at rooms[req.params.id].name
-    let name = app.get('rooms')[req.params.id].name;
-    res.render('room', { title: 'Title', id: req.params.id , name: name});
+    console.log("App Rooms: " + JSON.stringify(app.get('rooms')));
+
+    let room = app.get('rooms')[req.params.id];
+
+    // Redirect to lobby if room cannot be found
+    if (!room) {
+      res.redirect('/');
+    }
+
+    res.render('room', { title: 'Title', id: req.params.id , name: room.name});
   });
 
   return router;

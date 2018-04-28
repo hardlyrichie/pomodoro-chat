@@ -27,3 +27,10 @@ socket.on('delete room user', function(name) {
     userItem.remove();    
   }
 });
+
+// ---------Message Form--------------
+let messageForm = document.querySelector('.form--message');
+
+messageForm.onsubmit = function(event) {
+  console.log("ha");
+}
