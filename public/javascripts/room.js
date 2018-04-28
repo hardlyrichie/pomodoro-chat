@@ -32,5 +32,15 @@ socket.on('delete room user', function(name) {
 let messageForm = document.querySelector('.form--message');
 
 messageForm.onsubmit = function(event) {
-  console.log("ha");
+  event.preventDefault();
+  
+  let messagebox = document.querySelector('#messagebox');
+  socket.emit('message', messagebox.value);
+  messagebox.value = '';
 }
+
+socket.on('message', function(message) {
+  let chat = document.querySelector('.chat');
+
+  chat.insertAdjacentHTML('beforeend', `<li>${message}</li>`);
+});

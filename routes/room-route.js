@@ -63,6 +63,12 @@ module.exports = function(app, io) {
         io.to(roomId).emit('delete room user', socket.handshake.session.nickname);
       }
     });
+
+    // Message
+    socket.on('message', function(message) {
+      let user = socket.handshake.session.nickname;
+      io.emit('message', `[${user}]: ${message}`);
+    });
   });
 
   /* GET room */
