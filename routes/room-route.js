@@ -67,7 +67,8 @@ module.exports = function(app, io) {
     // Message
     socket.on('message', function(message) {
       let user = socket.handshake.session.nickname;
-      io.emit('message', `[${user}]: ${message}`);
+      socket.broadcast.emit('message', `[${user}]:`, `${message}`);
+      socket.emit('message', `[${user}]:`, `${message}`, true);
     });
   });
 

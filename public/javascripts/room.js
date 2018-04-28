@@ -39,8 +39,12 @@ messageForm.onsubmit = function(event) {
   messagebox.value = '';
 }
 
-socket.on('message', function(message) {
+socket.on('message', function(user, message, messageType) {
   let chat = document.querySelector('.chat');
 
-  chat.insertAdjacentHTML('beforeend', `<li>${message}</li>`);
+  // Your message: blue, Other messages: default(grey)
+  let color = messageType ? 'blue' : 'grey';
+  console.log("COlor:" + color);
+
+  chat.insertAdjacentHTML('beforeend', `<li style='color:${color};'>${user} ${message}</li>`);  
 });
