@@ -20,7 +20,7 @@ socket.on('update room userlist', function(name) {
   item.className = name; 
   userlist.append(item);
 
-  joinMessage(name);
+  updateMessage(name, 'joined');
 });
 
 socket.on('delete room user', function(name) {
@@ -28,6 +28,8 @@ socket.on('delete room user', function(name) {
   if (userItem) {
     userItem.remove();    
   }
+
+  updateMessage(name, 'left');
 });
 
 // ---------Message Form--------------
@@ -50,8 +52,8 @@ socket.on('message', function(user, message, messageType) {
 });
 
 // New user joined message
-function joinMessage(name) {
-  chat.insertAdjacentHTML('beforeend', `<li style='color:green;'>${name} has joined the room</li>`);    
+function updateMessage(name, message) {
+  chat.insertAdjacentHTML('beforeend', `<li style='color:green;'>${name} has ${message} the room</li>`);    
 }
 
 // User typing message
@@ -74,14 +76,14 @@ socket.on('currently typing', function(name) {
     typingMessage.textContent = `${name} is typing ...`;
   }
   
-  // If 3 seconds pass without new type event, remove typing message
-  let removeMessage = setTimeout(() => typingMessage.remove(), 3000);
+  // If 1.5 seconds pass without new type event, remove typing message
+  let removeMessage = setTimeout(() => typingMessage.remove(), 1500);
 
   if (Date.now() - start < 3000) {
     clearTimeout(removeMessage);
 
     // Reset timer
-    removeMessage = setTimeout(() => typingMessage.remove(), 3000);
+    removeMessage = setTimeout(() => typingMessage.remove(), 1500);
   } else {
     start = null;
     typingMessage = null;

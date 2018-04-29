@@ -31,7 +31,7 @@ module.exports = function(app, io) {
 
       console.log(socket.handshake.session.nickname + " has left room " + room.name);
 
-      // Remove from room list
+      // Remove client from room list
       let index = room.users.indexOf(socket.handshake.session.nickname);
       if (index >= 0) {
         room.users.splice(index, 1);
@@ -41,23 +41,19 @@ module.exports = function(app, io) {
       if (room.users.length < 1) {
 
         let refresh = new Promise(resolve => {
-          let shouldDelete;
           // Wait one second to decide if user left the room or refreshed the page
-          setTimeout(() => room.users.length < 1 ? shouldDelete = true : shouldDelete = false, 1000);
-
-          resolve(shouldDelete);
+          setTimeout(() => room.users.length < 1 ? resolve(true) : resolve(false), 1000);
         });
 
         refresh.then(shouldDelete => {
           if (!shouldDelete) return;
 
-          
+          console.log("deleting room ...");
           delete app.get('rooms')[roomId];
 
           // Update all client's roomlist in lobby
           io.emit('delete room', roomId)
         });
-;
       } else {
         // Update room userlist that client is disconnecting
         io.to(roomId).emit('delete room user', socket.handshake.session.nickname);
