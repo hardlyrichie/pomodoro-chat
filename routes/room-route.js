@@ -70,6 +70,10 @@ module.exports = function(app, io) {
       socket.broadcast.emit('message', `[${user}]:`, `${message}`);
       socket.emit('message', `[${user}]:`, `${message}`, true);
     });
+
+    socket.on('typing', function() {
+      socket.broadcast.emit('currently typing', socket.handshake.session.nickname);
+    });
   });
 
   /* GET room */
