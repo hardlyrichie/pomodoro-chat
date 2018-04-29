@@ -21,7 +21,7 @@ module.exports = function(app, io) {
 
       // Update all other clients's room userlist
       socket.broadcast.to(id).emit('update room userlist', socket.handshake.session.nickname);
-
+      
       console.log(socket.handshake.session.nickname + " has joined the room: " + id);
     })
 

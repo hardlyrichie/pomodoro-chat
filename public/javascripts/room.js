@@ -19,6 +19,8 @@ socket.on('update room userlist', function(name) {
   item.textContent = name;
   item.className = name; 
   userlist.append(item);
+
+  joinMessage(name);
 });
 
 socket.on('delete room user', function(name) {
@@ -30,6 +32,7 @@ socket.on('delete room user', function(name) {
 
 // ---------Message Form--------------
 let messageForm = document.querySelector('.form--message');
+let chat = document.querySelector('.chat');
 
 messageForm.onsubmit = function(event) {
   event.preventDefault();
@@ -40,11 +43,12 @@ messageForm.onsubmit = function(event) {
 }
 
 socket.on('message', function(user, message, messageType) {
-  let chat = document.querySelector('.chat');
-
   // Your message: blue, Other messages: default(grey)
   let color = messageType ? 'blue' : 'grey';
-  console.log("COlor:" + color);
 
   chat.insertAdjacentHTML('beforeend', `<li style='color:${color};'>${user} ${message}</li>`);  
 });
+
+function joinMessage(name) {
+  chat.insertAdjacentHTML('beforeend', `<li style='color:green;'>${name} has joined the room</li>`);    
+}
