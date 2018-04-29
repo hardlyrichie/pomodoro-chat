@@ -5,7 +5,7 @@ block content
     form.form--nickname
       h2 Choose your nickname:
       label(for="nickname") Nickname:
-      input(type="text" id="nickname" name="nickname" required)
+      input(type="text" id="nickname" name="nickname" required autocomplete="off")
       input(type="submit" value="Enter")
   else
     script.
@@ -27,7 +27,7 @@ block content
   form.form--create-room(action="" method="POST")
     h2 Create Room
     label(for="room_name") Room Name:
-    input(type="text" id="room_name" name="room_name" required)
+    input(type="text" id="room_name" name="room_name" required autocomplete="off")
     label(for="password") Password:
     input(type="password" id="password" name="password")
     input(type="submit" value="Create")

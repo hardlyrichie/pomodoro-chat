@@ -5,11 +5,19 @@ let nicknameForm = document.querySelector('.form--nickname');
 let nickname;
 
 if (nicknameForm) {
+  // Hide lobby and create room form before entering nickname
+  let lobby = document.querySelector('.lobby');
+  let createRoomForm = document.querySelector('.form--create-room');
+  lobby.style.display = 'none';
+
   nicknameForm.onsubmit = function(event) {
     event.preventDefault();
     nickname = document.querySelector('#nickname').value;
     socket.emit('join', nickname);
     this.remove();
+
+    // Show lobby upon entering nickname
+    lobby.style.display = 'block';  
   };
 }
 
