@@ -57,13 +57,15 @@ function updateMessage(name, message) {
 }
 
 // User typing message
+let debounceType = debounce(() => socket.emit('typing'), 1000); 
 messagebox.oninput = function() {
-  socket.emit('typing');
+  debounceType();
 };
 
-let start, typingMessage;
+let start, typingMessage, removeMessage;
 
 socket.on('currently typing', function(name) {
+  console.log("Currently Typing");
   if (!start) {
     start = Date.now();
   }
@@ -74,21 +76,44 @@ socket.on('currently typing', function(name) {
     typingMessage = document.createElement('li');
     typingMessage.style.color = 'green';
     typingMessage.textContent = `${name} is typing ...`;
+
+    removeMessage = setTimeout(() => {
+      typingMessage.remove();
+      start = null;
+      typingMessage = null; 
+      removeMessage = null;
+    }, 2000);
   }
   
-  // If 1.5 seconds pass without new type event, remove typing message
-  let removeMessage = setTimeout(() => typingMessage.remove(), 1500);
-
-  if (Date.now() - start < 3000) {
+  // If 2 seconds pass without new type event, remove typing message
+  if (Date.now() - start < 2000) {
     clearTimeout(removeMessage);
 
     // Reset timer
-    removeMessage = setTimeout(() => typingMessage.remove(), 1500);
-  } else {
-    start = null;
-    typingMessage = null;
-    return;
-  }
+    removeMessage = setTimeout(() => {
+      typingMessage.remove();
+      start = null;
+      typingMessage = null; 
+      removeMessage = null;      
+    }, 2000);
+  } 
 
-  chat.append(typingMessage);  
+  chat.append(typingMessage);
 });
+
+// Debounce decorator
+function debounce(f, ms) {
+
+  let isCooldown = false;
+
+  return function() {
+    if (isCooldown) return;
+
+    f.apply(this, arguments);
+
+    isCooldown = true;
+
+    setTimeout(() => isCooldown = false, ms);
+  };
+
+}
