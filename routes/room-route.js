@@ -3,6 +3,7 @@
 module.exports = function(app, io) {
   let express = require('express');
   let router = express.Router();
+  let bcrypt = require('bcrypt');  
 
   io.on('connection', function(socket) {
     let room, roomId;
@@ -36,6 +37,10 @@ module.exports = function(app, io) {
       if (index >= 0) {
         room.users.splice(index, 1);
       }
+
+      // Delete password session data
+      delete socket.handshake.session.password;
+      socket.handshake.session.save();
 
       // Delete room if all users left room
       if (room.users.length < 1) {
@@ -74,25 +79,45 @@ module.exports = function(app, io) {
 
   // Check nickname entered middleware
   router.use(function(req, res, next) {
-    if (!req.session.nickname) {
-      res.redirect('/');
-    } else {
-      next();    
-    }
+    if (!req.session.nickname) res.redirect('/');
+    else next();    
   });
 
   /* GET room */
-  router.get('/:id', function(req, res) {
-    console.log("App Rooms: " + JSON.stringify(app.get('rooms')));
+  router.get('/:id', 
+    // Check password middleware
+    function(req, res, next) {
+      req.room = app.get('rooms')[req.params.id];    
+      console.log(app.get('rooms')); 
+      if (req.room.users.length === 0 || !req.room.password || req.session.password) {
+        next();
+      } else {
+        res.render('password');
+      }
+    },
+    function(req, res) {
+      console.log("App Rooms: " + JSON.stringify(app.get('rooms')));
 
-    let room = app.get('rooms')[req.params.id];
+      // Redirect to lobby if room cannot be found
+      if (!req.room) {
+        res.redirect('/');
+      }
 
-    // Redirect to lobby if room cannot be found
-    if (!room) {
-      res.redirect('/');
-    }
+      res.render('room', { id: req.params.id , name: req.room.name });
+  });
 
-    res.render('room', { title: 'Title', id: req.params.id , name: room.name});
+  /* POST password room */
+  router.post('/:id', function(req, res) {
+    let password = req.body.password;
+    bcrypt.compare(password, app.get('rooms')[req.params.id].password)
+      .then(function(result) {
+        if (result) {
+          req.session.password = true;
+          res.redirect(`/room/${req.params.id}`);
+        } else {
+          res.render('password-failed');
+        }
+      });
   });
 
   return router;

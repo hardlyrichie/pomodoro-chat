@@ -3,6 +3,7 @@
 module.exports = function(app, io) {
   let express = require('express');
   let uuidv1 = require('uuid/v1');
+  let bcrypt = require('bcrypt');
   let router = express.Router();
 
   let users = {};
@@ -53,7 +54,7 @@ module.exports = function(app, io) {
 
   /* GET home page. */
   router.get('/', function(req, res, next) {
-    res.render('index', { title: 'Study Chat', nickname: req.session.nickname });
+    res.render('index', { nickname: req.session.nickname });
   });
 
   /* POST create room */
@@ -61,16 +62,32 @@ module.exports = function(app, io) {
     // Create new room id and store room name
     let id = uuidv1();
     let name = req.body.room_name;
+    
+    let password = req.body.password.trim();
+
     rooms[id] = { 
       name,
       users: []
     };
 
-    // Update all client's roomlist with new room
-    io.emit('update roomlist', id, name);
+    storePassword(password, id).then(() => {
+      console.log("Done storing password");
 
-    res.redirect(`/room/${id}`);
+      // Update all client's roomlist with new room
+      io.emit('update roomlist', id, name);
+
+      res.redirect(`/room/${id}`);
+    });
   });
+
+  async function storePassword (password, id) {
+    if (!password) return;
+
+    password = await bcrypt.hash(password, 10);
+  
+    rooms[id].password = password;
+  }
+  
 
   return router;
 }
