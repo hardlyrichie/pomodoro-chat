@@ -72,6 +72,15 @@ module.exports = function(app, io) {
     });
   });
 
+  // Check nickname entered middleware
+  router.use(function(req, res, next) {
+    if (!req.session.nickname) {
+      res.redirect('/');
+    } else {
+      next();    
+    }
+  });
+
   /* GET room */
   router.get('/:id', function(req, res) {
     console.log("App Rooms: " + JSON.stringify(app.get('rooms')));
