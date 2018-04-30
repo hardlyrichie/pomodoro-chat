@@ -1,5 +1,43 @@
 .form {
+
+  padding: 5rem;
+  border: 1px solid black;
+  box-shadow: 0 2rem 5rem rgba($color-black, .3);
+
+  &__group:not(:last-child) {
+    margin-bottom: 2rem;
+  }
+
+  &__input {
+    font-size: 1.5rem;
+    font-family: inherit;
+    color: inherit;
+    padding: 1rem 2rem;
+    border-radius: 1rem;
+    background-color: rgba($color-white, .5);
+    border: 3px solid $color-primary-light;
+    display: inline-block;
+    transition: all .3s;
+    width: 100%;
+
+    &:focus {
+      outline: none;
+      box-shadow: 0 1rem 2rem rgba($color-black, .1);
+    }
+  }
+
+  &--nickname {
+    @include absCenter;
+  }
+
   &--create-room {
     display: none;
+  }
+
+  & hr {
+    border: 0;
+    color: $color-grey-dark;
+    background-color: $color-grey-dark;
+    height: 1.5px;
   }
 }

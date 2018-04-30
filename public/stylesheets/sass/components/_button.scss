@@ -1,0 +1,32 @@
+.btn {
+  &,
+  &:link,
+  &:visited {
+    text-transform: uppercase;
+    text-decoration: none;
+    padding: 1rem;
+    display: block;
+    border-radius: 1.5rem;
+    transition: all .2s;
+    font-size: $default-font-size;
+    width: 100%;
+    background-color: $color-primary;
+    color: $color-white;
+
+    //Change for the <button> element
+    border: none;
+    cursor: pointer;
+  }
+
+  &:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 1rem 2rem rgba($color-black, .2);
+  }
+
+  &:active,
+  &:focus {
+    outline: none;
+    transform: translateY(0);
+    box-shadow: 0 .5rem 1rem rgba($color-black, .2);  
+  }
+}

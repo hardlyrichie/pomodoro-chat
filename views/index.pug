@@ -2,16 +2,20 @@ extends layout
 
 block content
   if !nickname
-    form.form--nickname
-      h2 Choose your nickname:
-      label(for="nickname") Nickname:
-      input(type="text" id="nickname" name="nickname" required autocomplete="off")
-      input(type="submit" value="Enter")
+    form.form.form--nickname
+      .form__group
+          h2.heading-secondary Choose your nickname:
+          hr
+      .form__group
+        input.form__input(type="text" id="nickname" name="nickname" required autocomplete="off")
+      button.btn Enter
   else
     script.
       socket.emit('join', '#{nickname}');
   
   .lobby
+    h1.heading-primary Study Chat
+  
     .userlist
       h3 Users in lobby
       ul
@@ -24,13 +28,13 @@ block content
     
     button.button--refresh Refresh
   
-  form.form--create-room(action="" method="POST")
-    h2 Create Room
-    label(for="room_name") Room Name:
-    input(type="text" id="room_name" name="room_name" required autocomplete="off")
-    label(for="password") Password:
-    input(type="password" id="password" name="password")
-    input(type="submit" value="Create")
-    input(type="button" value="Cancel")
+    form.form--create-room(action="" method="POST")
+      h2 Create Room
+      label(for="room_name") Room Name:
+      input(type="text" id="room_name" name="room_name" required autocomplete="off")
+      label(for="password") Password:
+      input(type="password" id="password" name="password")
+      input(type="submit" value="Create")
+      input(type="button" value="Cancel")
 
   script(src="/javascripts/index.js")

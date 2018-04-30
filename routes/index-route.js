@@ -88,6 +88,5 @@ module.exports = function(app, io) {
     rooms[id].password = password;
   }
   
-
   return router;
 }
