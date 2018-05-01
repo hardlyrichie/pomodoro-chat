@@ -5,11 +5,11 @@
     text-transform: uppercase;
     text-decoration: none;
     padding: 1rem;
-    display: block;
+    display: inline-block;
     border-radius: 1.5rem;
     transition: all .2s;
     font-size: $default-font-size;
-    width: 100%;
+    // width: 100%;
     background-color: $color-primary;
     color: $color-white;
 

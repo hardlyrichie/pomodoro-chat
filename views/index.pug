@@ -15,26 +15,27 @@ block content
   
   .lobby
     h1.heading-primary Study Chat
-  
-    .userlist
-      h3 Users in lobby
-      ul
-    
-    .rooms
-      h3 Rooms
-      ul
 
-    button.button--create-room Create Room
+    button.btn.btn--create-room Create Room
     
-    button.button--refresh Refresh
-  
-    form.form--create-room(action="" method="POST")
-      h2 Create Room
-      label(for="room_name") Room Name:
-      input(type="text" id="room_name" name="room_name" required autocomplete="off")
-      label(for="password") Password:
-      input(type="password" id="password" name="password")
-      input(type="submit" value="Create")
-      input(type="button" value="Cancel")
+    button.btn.btn--refresh Refresh
+
+    .lobby__flex 
+      .lobby__roomlist
+        h3.heading-tertiary Rooms
+        ul.lobby__list
+
+      .lobby__userlist
+        h3.heading-tertiary Users in Lobby
+        ul.lobby__list
+
+  form.form.form--create-room(action="" method="POST")
+    h2 Create Room
+    label(for="room_name") Room Name:
+    input(type="text" id="room_name" name="room_name" required autocomplete="off")
+    label(for="password") Password:
+    input(type="password" id="password" name="password")
+    input(type="submit" value="Create")
+    input(type="button" value="Cancel")
 
   script(src="/javascripts/index.js")

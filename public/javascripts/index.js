@@ -22,7 +22,7 @@ if (nicknameForm) {
 }
 
 // ------------Create Room Form--------------
-let createRoom = document.querySelector('.button--create-room');
+let createRoom = document.querySelector('.btn--create-room');
 
 createRoom.onclick = function(event) {
   // Display form when create room button clicked
@@ -48,14 +48,14 @@ createRoom.onclick = function(event) {
 };
 
 // ------------Refresh--------------
-let refreshButton = document.querySelector('.button--refresh');
+let refreshButton = document.querySelector('.btn--refresh');
 
 refreshButton.onclick = function(event) {
   socket.emit('refresh');
 }
 
 // ----------USERLIST------------
-let userlist = document.querySelector('.userlist ul');
+let userlist = document.querySelector('.lobby__userlist ul');
 
 socket.on('get userlist', function(users) {
   userlist.innerHTML = '';
@@ -83,7 +83,7 @@ socket.on('delete user', function(name) {
 });
 
 // ----------ROOMLIST-------------
-let roomlist = document.querySelector('.rooms ul');
+let roomlist = document.querySelector('.lobby__roomlist ul');
 
 socket.on('get roomlist', function(rooms) {
   roomlist.innerHTML = '';
