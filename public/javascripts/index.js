@@ -45,7 +45,7 @@ createRoom.onclick = function(event) {
   
 
   // Hide form when cancel
-  let cancelFormButton = document.querySelector('.btn--negative');
+  let cancelFormButton = document.querySelector('.btn--neg');
   cancelFormButton.onclick = function(event) {
     popup.style.opacity = 0;
     popup.style.visibility = 'hidden';

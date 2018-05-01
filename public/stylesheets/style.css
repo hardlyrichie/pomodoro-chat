@@ -35,7 +35,6 @@ body {
   color: #000; }
 
 .btn, .btn:link, .btn:visited {
-  text-transform: uppercase;
   text-decoration: none;
   padding: 1rem;
   display: inline-block;
@@ -49,13 +48,17 @@ body {
   transform: translateY(-2px);
   box-shadow: 0 1rem 2rem rgba(0, 0, 0, 0.2); }
 
-.btn:active, .btn:focus {
-  outline: none;
+.btn:active {
   transform: translateY(0);
   box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.2); }
 
+.btn:active, .btn:focus {
+  outline: none; }
+
 .btn--fill {
-  width: 100%;
+  width: 100%; }
+
+.btn--pos, .btn--fill {
   background-color: #FF6107;
   color: #fff; }
 
@@ -80,7 +83,8 @@ body {
   color: #fff;
   transform: translateY(-2px) scale(1.1, 1.1);
   transform-origin: 50% 100%;
-  box-shadow: 0 1rem 2rem rgba(0, 0, 0, 0.2); }
+  box-shadow: 0 1rem 2rem rgba(0, 0, 0, 0.2);
+  border: none; }
 
 .btn-lobby:active {
   transform: translateY(0) scale(1, 1);
@@ -117,6 +121,11 @@ body {
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%); }
+  .form--create-room .form__group:last-child {
+    text-align: center; }
+    .form--create-room .form__group:last-child > .btn {
+      padding: 1rem 2.5rem;
+      margin: 0 2px; }
   .form hr {
     border: 0;
     color: #777;

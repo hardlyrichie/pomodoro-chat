@@ -30,6 +30,17 @@
     @include absCenter;
   }
 
+  &--create-room {
+    & .form__group:last-child {
+      text-align: center;
+
+      & > .btn {
+        padding: 1rem 2.5rem;
+        margin: 0 2px;
+      }
+    }
+  }
+
   & hr {
     border: 0;
     color: $color-grey-dark;
