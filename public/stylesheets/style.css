@@ -24,7 +24,7 @@ body {
   background-image: linear-gradient(to bottom right, #ffb900, #FF6107);
   -webkit-background-clip: text;
   background-clip: text;
-  letter-spacing: 2rem; }
+  letter-spacing: 2.5rem; }
 
 .heading-secondary {
   font-size: 2.5rem;
@@ -136,8 +136,12 @@ body {
     justify-content: space-between;
     max-width: 80%;
     position: relative;
-    margin: 3rem auto;
+    top: 13rem;
+    margin: 0 auto;
     font-weight: 700; }
+    .lobby__flex > h1 {
+      position: absolute;
+      top: -14rem; }
   .lobby__roomlist {
     flex: 3; }
     .lobby__roomlist li:hover {

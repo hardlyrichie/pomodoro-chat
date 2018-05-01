@@ -4,10 +4,6 @@
   height: 94vh;
   position: relative;
 
-  & h1 {
-    // text-align: center;
-  }
-
   &__flex > * {
     margin: 1rem 1.5rem;
 
@@ -24,8 +20,14 @@
     justify-content: space-between;
     max-width: 80%;
     position: relative;
-    margin: 3rem auto;
+    top: 13rem;
+    margin: 0 auto;
     font-weight: 700;
+
+    & > h1 {
+      position: absolute;
+      top: -14rem;
+    }
   }
 
   &__roomlist {

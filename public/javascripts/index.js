@@ -98,7 +98,6 @@ socket.on('update roomlist', function(id, name) {
 });
 
 socket.on('delete room', function(id) {
-  // BUGGY
   let roomItem = document.getElementById(id);
   if (roomItem) {
     roomItem.remove();
