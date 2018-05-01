@@ -59,7 +59,7 @@ body {
   background-color: #FF6107;
   color: #fff; }
 
-.btn-lobby {
+.btn-lobby, .btn-lobby:link, .btn-lobby:visited {
   text-decoration: none;
   padding: 1rem;
   display: inline-block;
@@ -69,23 +69,28 @@ body {
   border: none;
   border-radius: .5rem;
   cursor: pointer;
-  background-image: linear-gradient(transparent 0%, transparent 50%, #FF6107 50%);
+  background-image: linear-gradient(#f7f7f7 0%, #f7f7f7 50%, #FF6107 50%);
   background-size: 190%;
-  color: #FF6107; }
-  .btn-lobby:hover {
-    background-size: 200%;
-    background-position: 0 100%;
-    color: #fff;
-    transform: translateY(-2px) scale(1.1, 1.1);
-    transform-origin: 50% 100%;
-    box-shadow: 0 1rem 2rem rgba(0, 0, 0, 0.2); }
-  .btn-lobby:active {
-    transform: translateY(0) scale(1, 1);
-    box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.2); }
-  .btn-lobby:active, .btn-lobby:focus {
-    outline: none; }
-  .btn-lobby--create-room {
-    margin-right: 1rem; }
+  color: #FF6107;
+  backface-visibility: hidden; }
+
+.btn-lobby:hover {
+  background-size: 200%;
+  background-position: 0 100%;
+  color: #fff;
+  transform: translateY(-2px) scale(1.1, 1.1);
+  transform-origin: 50% 100%;
+  box-shadow: 0 1rem 2rem rgba(0, 0, 0, 0.2); }
+
+.btn-lobby:active {
+  transform: translateY(0) scale(1, 1);
+  box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.2); }
+
+.btn-lobby:active, .btn-lobby:focus {
+  outline: none; }
+
+.btn-lobby--create-room {
+  margin-right: 1rem; }
 
 .form {
   padding: 5rem;
@@ -112,13 +117,30 @@ body {
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%); }
-  .form--create-room {
-    display: none; }
   .form hr {
     border: 0;
     color: #777;
     background-color: #777;
     height: 1.5px; }
+
+.popup {
+  position: fixed;
+  height: 100vh;
+  width: 100%;
+  background-color: rgba(0, 0, 0, 0.8);
+  top: 0;
+  left: 0;
+  z-index: 9999;
+  opacity: 0;
+  visibility: hidden;
+  transition: all .3s; }
+  .popup__content {
+    background-color: #fff;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%) scale(0.25);
+    transition: all .5s .2s; }
 
 .lobby {
   background-image: linear-gradient(165deg, #f7f7f7 0%, #f7f7f7 95%, #FF6107 95%);

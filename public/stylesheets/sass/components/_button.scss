@@ -36,18 +36,27 @@
 }
 
 .btn-lobby {
-  text-decoration: none;
-  padding: 1rem;
-  display: inline-block;
-  transition: all .2s;
-  font-size: $default-font-size;
-  font-weight: 500;
-  border: none;
-  border-radius: .5rem;
-  cursor: pointer;
-  background-image: linear-gradient(transparent 0%, transparent 50%, $color-primary 50%);
-  background-size: 190%;
-  color: $color-primary;    
+  &,
+  &:link,
+  &:visited {
+    text-decoration: none;
+    padding: 1rem;
+    display: inline-block;
+    transition: all .2s;
+    font-size: $default-font-size;
+    font-weight: 500;
+    // border-top: 2px solid darken($color-grey-light, 3%); 
+    // border-left: 2px solid darken($color-grey-light, 3%); 
+    // border-right: 2px solid darken($color-grey-light, 3%);
+    // border-bottom: none;  
+    border: none;     
+    border-radius: .5rem;
+    cursor: pointer;
+    background-image: linear-gradient($color-grey-light 0%, $color-grey-light 50%, $color-primary 50%);
+    background-size: 190%;
+    color: $color-primary;
+    backface-visibility: hidden;
+  }    
   
 
   &:hover {
@@ -56,7 +65,8 @@
     color: $color-white;    
     transform: translateY(-2px) scale(1.1, 1.1); 
     transform-origin : 50% 100%;
-    box-shadow: 0 1rem 2rem rgba($color-black, .2);       
+    box-shadow: 0 1rem 2rem rgba($color-black, .2);      
+    // border: none; 
   }
 
   &:active {

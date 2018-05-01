@@ -26,8 +26,12 @@ let createRoom = document.querySelector('.btn-lobby--create-room');
 
 createRoom.onclick = function(event) {
   // Display form when create room button clicked
-  let createRoomForm = document.querySelector('.form--create-room');
-  createRoomForm.style.display = 'block';
+  let popup = document.querySelector('.popup');
+  popup.style.opacity = 1;
+  popup.style.visibility = 'visible'; 
+
+  let popupContent = popup.querySelector('.popup__content');
+  popupContent.style.transform = 'translate(-50%, -50%) scale(1)';
 
   // Default room name
   let roomName = document.querySelector('#room_name');
@@ -41,9 +45,11 @@ createRoom.onclick = function(event) {
   
 
   // Hide form when cancel
-  let cancelFormButton = createRoomForm.querySelector('input[type="button"]');
+  let cancelFormButton = document.querySelector('.btn--negative');
   cancelFormButton.onclick = function(event) {
-    createRoomForm.style.display = 'none';
+    popup.style.opacity = 0;
+    popup.style.visibility = 'hidden';
+    popupContent.style.transform = '';
   }
 };
 
