@@ -34,12 +34,21 @@ body {
   font-size: 1.6rem;
   color: #000; }
 
+.u-margin-bottom-big {
+  margin-bottom: 8rem !important; }
+
+.u-margin-bottom-medium {
+  margin-bottom: 4rem !important; }
+
+.u-margin-bottom-small {
+  margin-bottom: 1rem !important; }
+
 .btn, .btn:link, .btn:visited {
   text-decoration: none;
   padding: 1rem;
   display: inline-block;
   border-radius: 1.5rem;
-  transition: all .2s;
+  transition: transform .2s, box-shadow .2s;
   font-size: 1.6rem;
   border: none;
   cursor: pointer; }
@@ -61,6 +70,10 @@ body {
 .btn--pos, .btn--fill {
   background-color: #FF6107;
   color: #fff; }
+
+.btn--pos, .btn--neg {
+  padding: 1rem 2.5rem;
+  margin: 0 1px; }
 
 .btn-lobby, .btn-lobby:link, .btn-lobby:visited {
   text-decoration: none;
@@ -102,6 +115,8 @@ body {
   box-shadow: 0 2rem 5rem rgba(0, 0, 0, 0.3); }
   .form__group:not(:last-child) {
     margin-bottom: 2rem; }
+  .form__group:last-child {
+    text-align: center; }
   .form__input {
     font-size: 1.5rem;
     font-family: inherit;
@@ -111,21 +126,16 @@ body {
     background-color: rgba(255, 255, 255, 0.5);
     border: 3px solid #ffb900;
     display: inline-block;
-    transition: all .3s;
+    transition: box-shadow .3s;
     width: 100%; }
     .form__input:focus {
       outline: none;
       box-shadow: 0 1rem 2rem rgba(0, 0, 0, 0.1); }
-  .form--nickname {
+  .form--center {
     position: absolute;
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%); }
-  .form--create-room .form__group:last-child {
-    text-align: center; }
-    .form--create-room .form__group:last-child > .btn {
-      padding: 1rem 2.5rem;
-      margin: 0 2px; }
   .form hr {
     border: 0;
     color: #777;
@@ -150,6 +160,17 @@ body {
     left: 50%;
     transform: translate(-50%, -50%) scale(0.25);
     transition: all .5s .2s; }
+
+.prompt {
+  padding: 5rem;
+  border: 1px solid black;
+  box-shadow: 0 2rem 5rem rgba(0, 0, 0, 0.3);
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%); }
+  .prompt a {
+    text-align: center; }
 
 .lobby {
   background-image: linear-gradient(165deg, #f7f7f7 0%, #f7f7f7 95%, #FF6107 95%);
@@ -208,4 +229,4 @@ body {
       outline: none; }
   .lobby__buttons {
     position: absolute;
-    transform: translateY(-110%); }
+    transform: translateY(-115%); }

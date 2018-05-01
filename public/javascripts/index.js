@@ -1,7 +1,7 @@
 'use strict';
 
 // ------------Nickname Form---------------
-let nicknameForm = document.querySelector('.form--nickname');
+let nicknameForm = document.querySelector('#nickname-form');
 let nickname;
 
 if (nicknameForm) {

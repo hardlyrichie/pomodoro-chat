@@ -1,0 +1,10 @@
+.prompt {
+  padding: 5rem;
+  border: 1px solid black;
+  box-shadow: 0 2rem 5rem rgba($color-black, .3);
+  @include absCenter;
+
+  & a {
+    text-align: center;
+  }
+}
