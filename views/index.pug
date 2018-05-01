@@ -8,7 +8,7 @@ block content
           hr
       .form__group
         input.form__input(type="text" id="nickname" name="nickname" required autocomplete="off")
-      button.btn Enter
+      button.btn.btn--fill Enter
   else
     script.
       socket.emit('join', '#{nickname}');
@@ -16,11 +16,11 @@ block content
   .lobby
     h1.heading-primary Study Chat
 
-    button.btn.btn--create-room Create Room
-    
-    button.btn.btn--refresh Refresh
-
     .lobby__flex 
+      .lobby__buttons
+        button.btn-lobby.btn-lobby--create-room Create Room
+        button.btn-lobby.btn-lobby--refresh Refresh
+
       .lobby__roomlist
         h3.heading-tertiary Rooms
         ul.lobby__list

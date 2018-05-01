@@ -22,7 +22,7 @@ if (nicknameForm) {
 }
 
 // ------------Create Room Form--------------
-let createRoom = document.querySelector('.btn--create-room');
+let createRoom = document.querySelector('.btn-lobby--create-room');
 
 createRoom.onclick = function(event) {
   // Display form when create room button clicked
@@ -48,7 +48,7 @@ createRoom.onclick = function(event) {
 };
 
 // ------------Refresh--------------
-let refreshButton = document.querySelector('.btn--refresh');
+let refreshButton = document.querySelector('.btn-lobby--refresh');
 
 refreshButton.onclick = function(event) {
   socket.emit('refresh');

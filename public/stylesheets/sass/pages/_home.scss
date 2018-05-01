@@ -4,8 +4,11 @@
   height: 94vh;
   position: relative;
 
+  & h1 {
+    // text-align: center;
+  }
+
   &__flex > * {
-    border-radius: 1rem;
     margin: 1rem 1.5rem;
 
     & > h3 {
@@ -21,7 +24,7 @@
     justify-content: space-between;
     max-width: 80%;
     position: relative;
-    margin: 0 auto;
+    margin: 3rem auto;
     font-weight: 700;
   }
 
@@ -76,5 +79,10 @@
     & a:focus {
       outline: none;
     }
+  }
+
+  &__buttons {
+    position: absolute;
+    transform: translateY(-110%);
   }
 }
