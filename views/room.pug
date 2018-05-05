@@ -2,7 +2,8 @@ extends layout
 
 block content
   script.
-    socket.emit('join room', "#{id}");
+    let roomId = '#{id}';
+    socket.emit('join room', roomId);
 
   h1= name
 
@@ -17,6 +18,12 @@ block content
     form.form--message
       input#messagebox(autocomplete='off')
       button send
+  
+  .videochat
+    video.videochat__localVideo(autoplay muted)
+    video.videochat__remoteVideo(autoplay)
+    button.videochat__call Start Call
 
   script(src="/javascripts/room.js")
+  script(src="/javascripts/videochat.js")  
 

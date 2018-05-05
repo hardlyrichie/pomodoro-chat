@@ -67,7 +67,7 @@ let start, typingMessage, removeMessage;
 socket.on('currently typing', function(name) {
   console.log("Currently Typing");
   if (!start) {
-    start = Date.now();
+    start = window.performance.now();
   }
 
   // TODO place the message elsewhere and fade in animation
@@ -86,7 +86,7 @@ socket.on('currently typing', function(name) {
   }
   
   // If 2 seconds pass without new type event, remove typing message
-  if (Date.now() - start < 2000) {
+  if (window.performance.now() - start < 2000) {
     clearTimeout(removeMessage);
 
     // Reset timer
