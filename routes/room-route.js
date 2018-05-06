@@ -25,8 +25,6 @@ module.exports = function(app, io) {
       
       console.log(socket.handshake.session.nickname + " has joined the room: " + roomId);
 
-      // Join signaling room
-      socket.join(signal_room);
       if (room.inCall) 
         socket.emit('call started');    
 
