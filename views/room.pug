@@ -3,7 +3,7 @@ extends layout
 block content
   script.
     let roomId = '#{id}';
-    socket.emit('join room', roomId, `${roomId}_signal`);
+    socket.emit('join room', roomId);
 
   h1= name
 

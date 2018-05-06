@@ -9,7 +9,7 @@ module.exports = function(app, io) {
     let room, roomId;
 
     // Join room
-    socket.on('join room', function(id, signal_room) {
+    socket.on('join room', function(id) {
       socket.join(id);
 
       roomId = id;
@@ -90,6 +90,8 @@ module.exports = function(app, io) {
       console.log('Starting Call');
 
       room.inCall = true;
+
+      socket.join(signal_room);
 
       // TODO upon leaving chatroom, leave ALL rooms!!
       socket.in(roomId).emit('call started');

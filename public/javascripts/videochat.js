@@ -24,7 +24,7 @@ callButton.onclick = function() {
   displayVideo()
   .then(() => {
     console.log('Starting call');
-    socket.emit('start call')
+    socket.emit('start call', SIGNAL_ROOM)
   });
 };
 
