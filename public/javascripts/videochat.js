@@ -94,6 +94,8 @@ function startSignaling(isInitiator, id) {
 
   pc[id] = new RTCPeerConnection(configuration);
 
+  console.log("Peer Connection Object Start Signalling: " + JSON.stringify(pc));
+
   // send any ice candidates to the other peer
   pc[id].onicecandidate = function(event) {
     if (event.candidate) {
@@ -127,7 +129,7 @@ function startSignaling(isInitiator, id) {
 
   // once remote track arrives, show it in the remote video element
   pc[id].ontrack = function(event) {
-    console.log("Peer Connection Object: " + JSON.stringify(pc));
+    console.log("Peer Connection Object on track: " + JSON.stringify(pc));
 
     if (remoteVideo[id] && !remoteVideo[id].srcObject) {
       // Create new remote video

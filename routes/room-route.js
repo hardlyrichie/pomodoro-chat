@@ -27,8 +27,8 @@ module.exports = function(app, io) {
 
       // Join signaling room
       socket.join(signal_room);
-      if (room.inCall && !room.initiatorId) 
-        socket.emit('call started', room.initiatorId);    
+      if (room.inCall) 
+        socket.emit('call started');    
 
       // console.log("io.sockets.adapter.rooms object", JSON.stringify(io.sockets.adapter.rooms));
     })
@@ -92,7 +92,6 @@ module.exports = function(app, io) {
       console.log('Starting Call');
 
       room.inCall = true;
-      room.initiatorId = socket.id;
 
       // TODO upon leaving chatroom, leave ALL rooms!!
       socket.in(roomId).emit('call started');
