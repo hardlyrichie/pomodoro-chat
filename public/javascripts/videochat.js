@@ -1,8 +1,9 @@
 'use strict';
 
 let localVideo = document.querySelector('.videochat__localVideo'); 
-let remoteVideo = document.querySelector('.videochat__remoteVideo');
+// let remoteVideo = document.querySelector('.videochat__remoteVideo');
 let callButton = document.querySelector('.videochat__call');
+let hangupButton = document.querySelector('.videochat__hangup');
 
 let constraints = {
   audio: true,
@@ -13,19 +14,25 @@ let configuration = {
     urls: 'stun:stun.l.google.com:19302'
   }]
 };
-let pc;
+let pc = {};
 let localStream;
 let SIGNAL_ROOM = `${roomId}_signal`;
+let remoteVideo = {};
 
-// TODO Change callButton text for any new client that enters the room when call already started
 callButton.onclick = function() {
   callButton.disabled = 'true';
   displayVideo()
   .then(() => {
     console.log('Starting call');
-    socket.emit('start call', SIGNAL_ROOM)
+    socket.emit('start call')
   });
 };
+
+// hangupButton.onclick = function() {
+//   endCall();
+
+//   socket.emit('end call', SIGNAL_ROOM);
+// };
 
 // Join video call
 socket.on('call started', function() {
@@ -40,20 +47,20 @@ socket.on('call started', function() {
         console.log('Signaling Join Call');
         socket.emit('join call', SIGNAL_ROOM); 
       });
-    // socket.emit('join call', SIGNAL_ROOM); 
-    
   };
 });
 
-socket.on('start signaling', () => startSignaling(true));
+socket.on('end call', endCall);
+
+socket.on('start signaling', (id) => startSignaling(true, id));
 
 // Signaling messages
 socket.on('signaling_message', function(data) {
   console.log('Signal recieved: ' + data.type);
 
   // Setup the RTC Peer Connection object
-  if (!pc)
-    startSignaling(false);
+  if (!pc[data.id])
+    startSignaling(false, data.id);
 
   let message = JSON.parse(data.message);
   if (message.sdp) {
@@ -62,35 +69,35 @@ socket.on('signaling_message', function(data) {
     // if we get an offer, we need to reply with an answer
     if (desc.type == 'offer') {
       console.log('Received Offer');
-      pc.setRemoteDescription(desc)
-        .then(() => pc.createAnswer()) // create answer based off of offer and send it
-        .then((answer) => pc.setLocalDescription(answer))
+      pc[data.id].setRemoteDescription(desc)
+        .then(() => pc[data.id].createAnswer()) // create answer based off of offer and send it
+        .then((answer) => pc[data.id].setLocalDescription(answer))
         .then(() => {
-          socket.emit('signal', { type: 'SPD', message: JSON.stringify({ sdp: pc.localDescription }), room: SIGNAL_ROOM });
+          socket.emit('signal', { type: 'SPD', message: JSON.stringify({ sdp: pc[data.id].localDescription }), id: data.id });
         })
         .catch(logError);
     } else if (desc.type == 'answer') {
       console.log('recieved answer');
-      pc.setRemoteDescription(desc).catch(logError);
+      pc[data.id].setRemoteDescription(desc).catch(logError);
     } else {
       console.error('Unsupported SDP type.' + JSON.stringify(desc));
     }
   } else {
     console.log('add remote ice candidate');
-    pc.addIceCandidate(message.candidate).catch(logError);
+    pc[data.id].addIceCandidate(message.candidate).catch(logError);
   }
 });
 
 // Initiates signaling process
-function startSignaling(isInitiator) {
+function startSignaling(isInitiator, id) {
   console.log('staring signaling...');
 
-  pc = new RTCPeerConnection(configuration);
+  pc[id] = new RTCPeerConnection(configuration);
 
   // send any ice candidates to the other peer
-  pc.onicecandidate = function(event) {
+  pc[id].onicecandidate = function(event) {
     if (event.candidate) {
-      socket.emit('signal', { type: 'ice candidate', message: JSON.stringify({ candidate: event.candidate }), room: SIGNAL_ROOM });      
+      socket.emit('signal', { type: 'ice candidate', message: JSON.stringify({ candidate: event.candidate }), id: id });      
     } 
     console.log('completed that ice candidate');
   };
@@ -100,7 +107,7 @@ function startSignaling(isInitiator) {
     let isNegotiating = false;
     
     // triggered when need SDP offer, trigger offer generation
-    pc.onnegotiationneeded = function() {
+    pc[id].onnegotiationneeded = function() {
       if (isNegotiating) {
         console.log('Skip nested negotiations');
         return;
@@ -109,25 +116,37 @@ function startSignaling(isInitiator) {
 
       console.log('on negotiation called');
 
-      pc.createOffer().then(offer => { console.log('setting localdescription after creating offer'); return pc.setLocalDescription(offer); })
+      pc[id].createOffer().then(offer => { console.log('setting localdescription after creating offer'); return pc[id].setLocalDescription(offer); })
         .then(() =>  {
           // send offer to other peer
-          socket.emit('signal', { type: 'SDP', message: JSON.stringify({ sdp: pc.localDescription }), room: SIGNAL_ROOM });
+          socket.emit('signal', { type: 'SDP', message: JSON.stringify({ sdp: pc[id].localDescription }), id: id });
         })
         .catch(logError);
     };
   }
 
   // once remote track arrives, show it in the remote video element
-  pc.ontrack = function(event) {
+  pc[id].ontrack = function(event) {
+    console.log("Peer Connection Object: " + JSON.stringify(pc));
+
+    if (remoteVideo[id] && !remoteVideo[id].srcObject) {
+      // Create new remote video
+      remoteVideo[id].srcObject = event.streams[0];    
+      document.querySelector('.videochat').append(remoteVideo[id]);
+    }
+    
+
     // don't set srcObject again if it is already set
-    if (!remoteVideo.srcObject)
-      remoteVideo.srcObject = event.streams[0];
+    // if (!remoteVideo.srcObject)
+    //   remoteVideo.srcObject = event.streams[0];
   };
 
   console.count("Add local stream");
-  pc.addTrack(localStream.getAudioTracks()[0], localStream)
-  pc.addTrack(localStream.getVideoTracks()[0], localStream)
+  pc[id].addTrack(localStream.getAudioTracks()[0], localStream)
+  pc[id].addTrack(localStream.getVideoTracks()[0], localStream)
+
+  remoteVideo[id] = document.createElement('video');
+  remoteVideo[id].autoplay = 'true';
 }
 
 function displayVideo() {
@@ -148,6 +167,12 @@ function hasGetUserMedia() {
 function onSuccess(stream) {
   localVideo.srcObject = stream;
   localStream = stream;
+}
+
+function endCall() {
+  console.log('Ending call');
+  pc.close();
+  pc = null;
 }
 
 function logError(err) {

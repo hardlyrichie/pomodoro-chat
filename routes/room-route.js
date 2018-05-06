@@ -27,8 +27,8 @@ module.exports = function(app, io) {
 
       // Join signaling room
       socket.join(signal_room);
-      if (room.inCall) 
-        socket.emit('call started');    
+      if (room.inCall && !room.initiatorId) 
+        socket.emit('call started', room.initiatorId);    
 
       // console.log("io.sockets.adapter.rooms object", JSON.stringify(io.sockets.adapter.rooms));
     })
@@ -85,13 +85,14 @@ module.exports = function(app, io) {
 
     //--------------Signaling----------------
     // Initiator joins WebRTC signaling room and informs everyone in chatroom of video call
-    socket.on('start call', function(signal_room) {
+    socket.on('start call', function() {
       // Check if call has not already been started
       if (room.inCall) return;
 
       console.log('Starting Call');
 
       room.inCall = true;
+      room.initiatorId = socket.id;
 
       // TODO upon leaving chatroom, leave ALL rooms!!
       socket.in(roomId).emit('call started');
@@ -99,14 +100,21 @@ module.exports = function(app, io) {
 
     socket.on('join call', function(signal_room) {
       socket.join(signal_room);
-      socket.in(roomId).emit('start signaling');
+
+      // Inform all other clients in signal_room to start a peer connection with this client
+      socket.in(signal_room).emit('start signaling', socket.id);
     });
 
     socket.on('signal', function(data) {
-      socket.in(data.room).emit('signaling_message', {
+      socket.to(data.id).emit('signaling_message', {
         type: data.type,
-        message: data.message
+        message: data.message,
+        id: socket.id
       });
+    });
+
+    socket.on('end call', function(signal_room) {
+      socket.in(signal_room).emit('end call');
     });
 
   });
