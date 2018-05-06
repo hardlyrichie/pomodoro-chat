@@ -9,9 +9,9 @@ module.exports = function(app, io) {
     let room, roomId;
 
     // Join room
-    socket.on('join room', function(id) {
+    socket.on('join room', function(id, signal_room) {
       socket.join(id);
-      
+
       roomId = id;
       room = app.get('rooms')[roomId];
       if (!room) return;
@@ -24,6 +24,11 @@ module.exports = function(app, io) {
       socket.to(roomId).emit('update room userlist', socket.handshake.session.nickname);
       
       console.log(socket.handshake.session.nickname + " has joined the room: " + roomId);
+
+      // Join signaling room
+      socket.join(signal_room);
+      if (room.inCall) 
+        socket.emit('call started');    
 
       // console.log("io.sockets.adapter.rooms object", JSON.stringify(io.sockets.adapter.rooms));
     })
@@ -81,13 +86,14 @@ module.exports = function(app, io) {
     //--------------Signaling----------------
     // Initiator joins WebRTC signaling room and informs everyone in chatroom of video call
     socket.on('start call', function(signal_room) {
-      // Check if signaling has not already been started
-      if (io.sockets.adapter.rooms[signal_room]) return;
+      // Check if call has not already been started
+      if (room.inCall) return;
 
       console.log('Starting Call');
 
+      room.inCall = true;
+
       // TODO upon leaving chatroom, leave ALL rooms!!
-      socket.join(signal_room);
       socket.in(roomId).emit('call started');
     });
 

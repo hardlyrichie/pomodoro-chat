@@ -3,7 +3,7 @@ extends layout
 block content
   script.
     let roomId = '#{id}';
-    socket.emit('join room', roomId);
+    socket.emit('join room', roomId, `${roomId}_signal`);
 
   h1= name
 
@@ -21,9 +21,11 @@ block content
   
   .videochat
     video.videochat__localVideo(autoplay muted)
-    video.videochat__remoteVideo(autoplay)
+    video.videochat__remoteVideo(autoplay muted)
     button.videochat__call Start Call
+    button.videochat__hangup Hang Up
 
+  script(src="https://webrtc.github.io/adapter/adapter-latest.js")
   script(src="/javascripts/room.js")
   script(src="/javascripts/videochat.js")  
 

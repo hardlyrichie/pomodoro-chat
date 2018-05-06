@@ -7,7 +7,7 @@ module.exports = function(app, io) {
   let router = express.Router();
 
   let users = {};
-  // room { name: name, users: [] }
+  // room { name: name, users: [], inCall: boolean }
   let rooms = {};
 
   app.set('rooms', rooms);
@@ -67,7 +67,8 @@ module.exports = function(app, io) {
 
     rooms[id] = { 
       name,
-      users: []
+      users: [],
+      inCall: false
     };
 
     storePassword(password, id).then(() => {
