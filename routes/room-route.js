@@ -83,7 +83,7 @@ module.exports = function(app, io) {
 
     //--------------Signaling----------------
     // Initiator joins WebRTC signaling room and informs everyone in chatroom of video call
-    socket.on('start call', function() {
+    socket.on('start call', function(signal_room) {
       // Check if call has not already been started
       if (room.inCall) return;
 
