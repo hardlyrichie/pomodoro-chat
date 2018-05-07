@@ -10,11 +10,11 @@ module.exports = function(app, io) {
 
     // Join room
     socket.on('join room', function(id) {
-      socket.join(id);
-
       roomId = id;
       room = app.get('rooms')[roomId];
       if (!room) return;
+
+      socket.join(id);
 
       room.users.push(socket.handshake.session.nickname);
 
@@ -39,6 +39,10 @@ module.exports = function(app, io) {
 
       console.log(socket.handshake.session.nickname + " has left room " + room.name);
 
+      // End video stream if in video call
+      if (socket.rooms[room.SIGNAL_ROOM])
+        socket.in(room.SIGNAL_ROOM).emit('end stream', socket.id);
+
       // Remove client from room list
       let index = room.users.indexOf(socket.handshake.session.nickname);
       if (index >= 0) {
@@ -51,25 +55,17 @@ module.exports = function(app, io) {
 
       // Delete room if all users left room
       if (room.users.length < 1) {
-
-        let refresh = new Promise(resolve => {
-          // Wait one second to decide if user left the room or refreshed the page
-          setTimeout(() => room.users.length < 1 ? resolve(true) : resolve(false), 1000);
-        });
-
-        refresh.then(shouldDelete => {
-          if (!shouldDelete) return;
-
-          console.log("deleting room ...");
-          delete app.get('rooms')[roomId];
-
-          // Update all client's roomlist in lobby
-          io.emit('delete room', roomId)
-        });
+        // Update all client's roomlist in lobby
+        io.emit('delete room', roomId);
+        delete app.get('rooms')[roomId];
       } else {
         // Update room userlist that client is disconnecting
         io.to(roomId).emit('delete room user', socket.handshake.session.nickname);
       }
+    });
+
+    socket.on('check room', function() {
+      socket.emit('room status', room ? true : false);
     });
 
     // Message
@@ -92,17 +88,19 @@ module.exports = function(app, io) {
 
       console.log('Starting Call');
 
+      room.SIGNAL_ROOM = signal_room;
+
       socket.join(signal_room);
 
       // TODO upon leaving chatroom, leave ALL rooms!!
       socket.in(roomId).emit('call started');
     });
 
-    socket.on('join call', function(signal_room) {
-      socket.join(signal_room);
+    socket.on('join call', function() {
+      socket.join(room.SIGNAL_ROOM);
 
       // Inform all other clients in signal_room to start a peer connection with this client(socket.id)
-      socket.in(signal_room).emit('start signaling', socket.id);
+      socket.in(room.SIGNAL_ROOM).emit('start signaling', socket.id);
     });
 
     socket.on('signal', function(data) {
@@ -113,8 +111,8 @@ module.exports = function(app, io) {
       });
     });
 
-    socket.on('end stream', function(signal_room, id) {
-      socket.in(signal_room).emit('end stream', id);
+    socket.on('end stream', function(id) {
+      socket.in(room.SIGNAL_ROOM).emit('end stream', id);
     });
 
   });
@@ -125,14 +123,19 @@ module.exports = function(app, io) {
     else next();    
   });
 
+  router.get('/error', function(req, res) {
+    res.render('fail', { message: 'Room declared empty and was deleted.' });
+  });
+
   /* GET room */
   router.get('/:id', 
     // Check password middleware
     function(req, res, next) {
       req.room = app.get('rooms')[req.params.id];    
-      console.log(app.get('rooms')); 
       // could use io.sockets.clients(room).length
-      if (req.room.users.length === 0 || !req.room.password || req.session.password) {
+      if (!req.room) {
+        res.redirect('/');
+      } else if (req.room.users.length === 0 || !req.room.password || req.session.password) {
         next();
       } else {
         res.render('password');
@@ -140,25 +143,26 @@ module.exports = function(app, io) {
     },
     function(req, res) {
       console.log("App Rooms: " + JSON.stringify(app.get('rooms')));
-
-      // Redirect to lobby if room cannot be found
-      if (!req.room) {
-        res.redirect('/');
-      }
-
+    
       res.render('room', { id: req.params.id , name: req.room.name });
   });
 
   /* POST password room */
   router.post('/:id', function(req, res) {
     let password = req.body.password;
-    bcrypt.compare(password, app.get('rooms')[req.params.id].password)
+    let room = app.get('rooms')[req.params.id];
+
+    if (!room) {
+      res.redirect('/room/error');
+    }
+
+    bcrypt.compare(password, room.password)
       .then(function(result) {
         if (result) {
           req.session.password = true;
           res.redirect(`/room/${req.params.id}`);
         } else {
-          res.render('password-failed');
+          res.render('fail', { message: 'Wrong password' });
         }
       });
   });

@@ -2,9 +2,7 @@
   padding: 5rem;
   border: 1px solid black;
   box-shadow: 0 2rem 5rem rgba($color-black, .3);
+  max-width: 50rem;
+  text-align: center;  
   @include absCenter;
-
-  & a {
-    text-align: center;
-  }
 }

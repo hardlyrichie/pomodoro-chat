@@ -30,7 +30,7 @@ callButton.onclick = function() {
 hangupButton.onclick = function() {
   endCall();
 
-  socket.emit('end stream', SIGNAL_ROOM, socket.id);
+  socket.emit('end stream', socket.id);
 };
 
 // Join video call
@@ -175,6 +175,8 @@ function endCall() {
 function endStream(id) {
   console.log('Ending stream: ' + id);
   pcs[id].close();
+  delete pcs[id];
+  delete remoteVideo[id];
 }
 
 function logError(err) {
