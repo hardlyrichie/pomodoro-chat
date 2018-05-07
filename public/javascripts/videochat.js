@@ -1,9 +1,14 @@
 'use strict';
 
 let localVideo = document.querySelector('.videochat__localVideo'); 
-// let remoteVideo = document.querySelector('.videochat__remoteVideo');
 let callButton = document.querySelector('.videochat__call');
 let hangupButton = document.querySelector('.videochat__hangup');
+let hideVideoButton = document.querySelector('.videochat__hideVideo');
+let muteButton = document.querySelector('.videochat__mute');
+
+let pcs = {}, remoteVideo = {};
+let localStream;
+let SIGNAL_ROOM = `${roomId}_signal`;
 
 let constraints = {
   audio: true,
@@ -14,9 +19,6 @@ let configuration = {
     urls: 'stun:stun.l.google.com:19302'
   }]
 };
-let pcs = {}, remoteVideo = {};
-let localStream;
-let SIGNAL_ROOM = `${roomId}_signal`;
 
 callButton.onclick = function() {
   callButton.disabled = 'true';
@@ -31,6 +33,37 @@ hangupButton.onclick = function() {
   endCall();
 
   socket.emit('end stream', socket.id);
+};
+
+hideVideoButton.onclick = function() {
+  console.log('Pausing/Unpausing');
+  // Loop through all peer connections and enable/disable the first videotrack of the first stream
+  for (let pc of Object.values(pcs)) {
+    let streams = pc.getLocalStreams();
+    getStream:
+    for (let stream of streams) {
+      for (let videoTrack of stream.getVideoTracks()) {
+        hideVideoButton.innerHTML = videoTrack.enabled ? 'Show video' : 'Hide video';
+        videoTrack.enabled = !videoTrack.enabled;
+        break getStream;
+      }
+    }
+  }
+};
+
+muteButton.onclick = function() {
+  console.log('Muting/Unmuting');
+  for (let pc of Object.values(pcs)) {
+    let streams = pc.getLocalStreams();
+    getStream:
+    for (let stream of streams) {
+      for (let audioTrack of stream.getAudioTracks()) {
+        muteButton.innerHTML = audioTrack.enabled ? 'Unmute' : 'Mute';
+        audioTrack.enabled = !audioTrack.enabled;
+        break getStream;        
+      }
+    }
+  }
 };
 
 // Join video call
