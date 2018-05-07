@@ -148,9 +148,10 @@ function displayVideo() {
   if (hasGetUserMedia()) {
     // get local stream, show it in localVideo element and add it to peerconnection object to be sent to peer
     return navigator.mediaDevices.getUserMedia(constraints)
-      .then(onSuccess).catch(logError);
+      .then(onSuccess).catch(handleGetUserMediaErrors);
   } else {
     console.error('getUserMedia() is not supported by your browser');
+    window.location = '/room/error?reason=not_supported'
   }
 }
 
@@ -162,6 +163,29 @@ function hasGetUserMedia() {
 function onSuccess(stream) {
   localVideo.srcObject = stream;
   localStream = stream;
+}
+
+function handleGetUserMediaErrors(err) {
+  /* handle the error */
+  if (err.name=="NotFoundError" || err.name == "DevicesNotFoundError" ){
+    //required track is missing
+    window.location = '/room/error?reason=track_missing';
+  } else if (err.name=="NotReadableError" || err.name == "TrackStartError" ){
+    //webcam or mic are already in use
+    window.location = '/room/error?reason=in_use';
+  } else if (err.name=="OverconstrainedError" || err.name == "ConstraintNotSatisfiedError" ){
+    //constraints can not be satisfied by avb. devices
+    window.location = '/room/error?reason=fail_constrains';
+  } else if (err.name=="NotAllowedError" || err.name == "PermissionDeniedError" ){
+    //permission denied in browser
+    // TODO DISPLAY Permisson denied message
+  } else if (err.name=="TypeError" || err.name == "TypeError" ){
+    //empty constraints object
+    window.location = '/room/error?reason=empty_constraints';       
+  } else {
+     //other errors
+    window.location = '/room/error';       
+  }
 }
 
 function endCall() {

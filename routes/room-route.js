@@ -124,7 +124,33 @@ module.exports = function(app, io) {
   });
 
   router.get('/error', function(req, res) {
-    res.render('fail', { message: 'Room declared empty and was deleted.' });
+    let reason = req.query.reason;
+    let message;
+
+    switch (reason) {
+      case 'room_deleted':
+        message = 'Room declared empty and was deleted';
+        break;
+      case 'track_missing':
+        message = 'Required track is missing';
+        break; 
+      case 'in_use':
+        message = 'Webcam or mic are already in use';
+        break;
+      case 'fail_constrains':
+        message = 'Constraints can not be satisfied by available devices';
+        break;
+      case 'empty_constraints':
+        message = 'Empty constraints object';
+        break;
+      case 'not_supported':
+        message = 'getUserMedia() is not supported by your browser';
+        break;
+      default:
+        message = 'Something went wrong';
+    }
+
+    res.render('fail', { message: message });
   });
 
   /* GET room */

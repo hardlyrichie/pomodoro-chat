@@ -7,7 +7,7 @@ socket.on('room status', function(status) {
     // Display room
   } else {
     // Display message and redirect back to lobby
-    window.location = '/room/error';
+    window.location = '/room/error?reason=room_deleted';
   }
 });
 
