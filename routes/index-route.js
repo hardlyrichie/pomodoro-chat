@@ -17,6 +17,9 @@ module.exports = function(app, io) {
       socket.on('join', function(name) {
         console.log(`${socket.id} has chosen the nickname ${name}`);
 
+        // Join lobby room
+        socket.join('lobby');
+
         users[socket.id] = name;
 
         // Store nickname in session
@@ -67,15 +70,14 @@ module.exports = function(app, io) {
 
     rooms[id] = { 
       name,
-      users: [],
-      inCall: false
+      users: []
     };
 
     storePassword(password, id).then(() => {
       console.log("Done storing password");
 
       // Update all client's roomlist with new room
-      io.emit('update roomlist', id, name);
+      io.in('lobby').emit('update roomlist', id, name);
 
       res.redirect(`/room/${id}`);
     });

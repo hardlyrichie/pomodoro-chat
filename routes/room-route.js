@@ -27,9 +27,12 @@ module.exports = function(app, io) {
       console.log(socket.handshake.session.nickname + " has joined the room: " + roomId);
 
       // Inform client that room is already in video call
-      if (room.inCall) 
-        socket.emit('call started');    
+      if (room.inCall) {
+        socket.emit('call started');
+        io.in(roomId).emit('update inCall count', room.inCall);
+      }
 
+      io.in('lobby').emit('update users in room', roomId, room.users.length);                  
       // console.log("io.sockets.adapter.rooms object", JSON.stringify(io.sockets.adapter.rooms));
     })
 
@@ -40,8 +43,9 @@ module.exports = function(app, io) {
       console.log(socket.handshake.session.nickname + " has left room " + room.name);
 
       // End video stream if in video call
-      if (socket.rooms[room.SIGNAL_ROOM])
-        socket.in(room.SIGNAL_ROOM).emit('end stream', socket.id);
+      if (socket.rooms[room.SIGNAL_ROOM]) {
+        leaveCall(); 
+      }
 
       // Remove client from room list
       let index = room.users.indexOf(socket.handshake.session.nickname);
@@ -84,7 +88,8 @@ module.exports = function(app, io) {
     socket.on('start call', function(signal_room) {
       // Check if call has not already been started
       if (room.inCall) return;
-      room.inCall = true;
+
+      room.inCall = 1;
 
       console.log('Starting Call');
 
@@ -94,6 +99,7 @@ module.exports = function(app, io) {
 
       // TODO upon leaving chatroom, leave ALL rooms!!
       socket.in(roomId).emit('call started');
+      io.in(roomId).emit('update inCall count', room.inCall);            
     });
 
     socket.on('join call', function() {
@@ -101,6 +107,7 @@ module.exports = function(app, io) {
 
       // Inform all other clients in signal_room to start a peer connection with this client(socket.id)
       socket.in(room.SIGNAL_ROOM).emit('start signaling', socket.id);
+      io.in(roomId).emit('update inCall count', ++room.inCall);            
     });
 
     socket.on('signal', function(data) {
@@ -111,10 +118,15 @@ module.exports = function(app, io) {
       });
     });
 
-    socket.on('end stream', function(id) {
-      socket.in(room.SIGNAL_ROOM).emit('end stream', id);
+    socket.on('end stream', function() {
+      leaveCall();
     });
 
+    function leaveCall() {
+      socket.in(room.SIGNAL_ROOM).emit('end stream', socket.id);
+      socket.leave(room.SIGNAL_ROOM);
+      io.in(roomId).emit('update inCall count', --room.inCall);            
+    }
   });
 
   // Check nickname entered middleware

@@ -109,3 +109,11 @@ socket.on('delete room', function(id) {
     roomItem.remove();
   }
 });
+
+socket.on('update room userlist', function(roomId, count) {
+  let roomItem = document.getElementById(id);
+  if (!roomItem) return;
+
+  // TODO finish implementaion
+
+});

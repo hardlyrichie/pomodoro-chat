@@ -21,7 +21,7 @@ let configuration = {
 };
 
 callButton.onclick = function() {
-  callButton.disabled = 'true';
+  callButton.disabled = true;
   displayVideo()
   .then(() => {
     console.log('Starting call');
@@ -32,38 +32,7 @@ callButton.onclick = function() {
 hangupButton.onclick = function() {
   endCall();
 
-  socket.emit('end stream', socket.id);
-};
-
-hideVideoButton.onclick = function() {
-  console.log('Pausing/Unpausing');
-  // Loop through all peer connections and enable/disable the first videotrack of the first stream
-  for (let pc of Object.values(pcs)) {
-    let streams = pc.getLocalStreams();
-    getStream:
-    for (let stream of streams) {
-      for (let videoTrack of stream.getVideoTracks()) {
-        hideVideoButton.innerHTML = videoTrack.enabled ? 'Show video' : 'Hide video';
-        videoTrack.enabled = !videoTrack.enabled;
-        break getStream;
-      }
-    }
-  }
-};
-
-muteButton.onclick = function() {
-  console.log('Muting/Unmuting');
-  for (let pc of Object.values(pcs)) {
-    let streams = pc.getLocalStreams();
-    getStream:
-    for (let stream of streams) {
-      for (let audioTrack of stream.getAudioTracks()) {
-        muteButton.innerHTML = audioTrack.enabled ? 'Unmute' : 'Mute';
-        audioTrack.enabled = !audioTrack.enabled;
-        break getStream;        
-      }
-    }
-  }
+  socket.emit('end stream');
 };
 
 // Join video call
@@ -72,7 +41,7 @@ socket.on('call started', function() {
   callButton.innerText = 'Join Call';
   callButton.onclick = function() {
     console.log('join call');   
-    callButton.disabled = 'true';
+    callButton.disabled = true;
     // wait for displayVideo before join call
     displayVideo()
       .then(() => {
@@ -174,7 +143,7 @@ function startSignaling(isInitiator, id) {
   pcs[id].addTrack(localStream.getVideoTracks()[0], localStream)
 
   remoteVideo[id] = document.createElement('video');
-  remoteVideo[id].autoplay = 'true';
+  remoteVideo[id].autoplay = true;
 }
 
 function displayVideo() {
@@ -239,3 +208,51 @@ function endStream(id) {
 function logError(err) {
   console.error(err.name + ': ' + err.message);
 }
+
+// ------------Buttons and other stuff--------------
+// TODO refactor with browserify
+
+hideVideoButton.onclick = function() {
+  console.log('Pausing/Unpausing');
+  // Loop through all peer connections and enable/disable the first videotrack of the first stream
+  for (let pc of Object.values(pcs)) {
+    let streams = pc.getLocalStreams();
+    getStream:
+    for (let stream of streams) {
+      for (let videoTrack of stream.getVideoTracks()) {
+        hideVideoButton.innerHTML = videoTrack.enabled ? 'Show video' : 'Hide video';
+        videoTrack.enabled = !videoTrack.enabled;
+        break getStream;
+      }
+    }
+  }
+};
+
+muteButton.onclick = function() {
+  console.log('Muting/Unmuting');
+  for (let pc of Object.values(pcs)) {
+    let streams = pc.getLocalStreams();
+    getStream:
+    for (let stream of streams) {
+      for (let audioTrack of stream.getAudioTracks()) {
+        muteButton.innerHTML = audioTrack.enabled ? 'Unmute' : 'Mute';
+        audioTrack.enabled = !audioTrack.enabled;
+        break getStream;        
+      }
+    }
+  }
+};
+
+socket.on('update inCall count', function(count) {
+  // Limit video call to 5 clients
+  if (count > 5) {
+    console.log('disabling button');
+    callButton.disabled = true;
+  } else {
+    console.log('not disabling button');    
+    callButton.disabled = false;
+  }
+
+  let countDisplay = document.querySelector('.inCall');
+  countDisplay.innerHTML = `<strong>${count}</strong>`; 
+});
