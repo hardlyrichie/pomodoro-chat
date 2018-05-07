@@ -14,10 +14,9 @@ let configuration = {
     urls: 'stun:stun.l.google.com:19302'
   }]
 };
-let pc = {};
+let pcs = {}, remoteVideo = {};
 let localStream;
 let SIGNAL_ROOM = `${roomId}_signal`;
-let remoteVideo = {};
 
 callButton.onclick = function() {
   callButton.disabled = 'true';
@@ -28,11 +27,11 @@ callButton.onclick = function() {
   });
 };
 
-// hangupButton.onclick = function() {
-//   endCall();
+hangupButton.onclick = function() {
+  endCall();
 
-//   socket.emit('end call', SIGNAL_ROOM);
-// };
+  socket.emit('end stream', SIGNAL_ROOM, socket.id);
+};
 
 // Join video call
 socket.on('call started', function() {
@@ -50,7 +49,7 @@ socket.on('call started', function() {
   };
 });
 
-socket.on('end call', endCall);
+socket.on('end stream', (id) => endStream(id));
 
 socket.on('start signaling', (id) => startSignaling(true, id));
 
@@ -59,7 +58,7 @@ socket.on('signaling_message', function(data) {
   console.log('Signal recieved: ' + data.type);
 
   // Setup the RTC Peer Connection object
-  if (!pc[data.id])
+  if (!pcs[data.id])
     startSignaling(false, data.id);
 
   let message = JSON.parse(data.message);
@@ -69,22 +68,22 @@ socket.on('signaling_message', function(data) {
     // if we get an offer, we need to reply with an answer
     if (desc.type == 'offer') {
       console.log('Received Offer');
-      pc[data.id].setRemoteDescription(desc)
-        .then(() => pc[data.id].createAnswer()) // create answer based off of offer and send it
-        .then((answer) => pc[data.id].setLocalDescription(answer))
+      pcs[data.id].setRemoteDescription(desc)
+        .then(() => pcs[data.id].createAnswer()) // create answer based off of offer and send it
+        .then((answer) => pcs[data.id].setLocalDescription(answer))
         .then(() => {
-          socket.emit('signal', { type: 'SPD', message: JSON.stringify({ sdp: pc[data.id].localDescription }), id: data.id });
+          socket.emit('signal', { type: 'SPD', message: JSON.stringify({ sdp: pcs[data.id].localDescription }), id: data.id });
         })
         .catch(logError);
     } else if (desc.type == 'answer') {
       console.log('recieved answer');
-      pc[data.id].setRemoteDescription(desc).catch(logError);
+      pcs[data.id].setRemoteDescription(desc).catch(logError);
     } else {
       console.error('Unsupported SDP type.' + JSON.stringify(desc));
     }
   } else {
     console.log('add remote ice candidate');
-    pc[data.id].addIceCandidate(message.candidate).catch(logError);
+    pcs[data.id].addIceCandidate(message.candidate).catch(logError);
   }
 });
 
@@ -92,12 +91,12 @@ socket.on('signaling_message', function(data) {
 function startSignaling(isInitiator, id) {
   console.log('staring signaling...');
 
-  pc[id] = new RTCPeerConnection(configuration);
+  pcs[id] = new RTCPeerConnection(configuration);
 
-  console.log("Peer Connection Object Start Signalling: " + JSON.stringify(pc));
+  console.log("Peer Connection Object Start Signalling: " + JSON.stringify(pcs));
 
   // send any ice candidates to the other peer
-  pc[id].onicecandidate = function(event) {
+  pcs[id].onicecandidate = function(event) {
     if (event.candidate) {
       socket.emit('signal', { type: 'ice candidate', message: JSON.stringify({ candidate: event.candidate }), id: id });      
     } 
@@ -109,7 +108,7 @@ function startSignaling(isInitiator, id) {
     let isNegotiating = false;
     
     // triggered when need SDP offer, trigger offer generation
-    pc[id].onnegotiationneeded = function() {
+    pcs[id].onnegotiationneeded = function() {
       if (isNegotiating) {
         console.log('Skip nested negotiations');
         return;
@@ -118,34 +117,28 @@ function startSignaling(isInitiator, id) {
 
       console.log('on negotiation called');
 
-      pc[id].createOffer().then(offer => { console.log('setting localdescription after creating offer'); return pc[id].setLocalDescription(offer); })
+      pcs[id].createOffer().then(offer => { console.log('setting localdescription after creating offer'); return pcs[id].setLocalDescription(offer); })
         .then(() =>  {
           // send offer to other peer
-          socket.emit('signal', { type: 'SDP', message: JSON.stringify({ sdp: pc[id].localDescription }), id: id });
+          socket.emit('signal', { type: 'SDP', message: JSON.stringify({ sdp: pcs[id].localDescription }), id: id });
         })
         .catch(logError);
     };
   }
 
   // once remote track arrives, show it in the remote video element
-  pc[id].ontrack = function(event) {
-    console.log("Peer Connection Object on track: " + JSON.stringify(pc));
-
+  pcs[id].ontrack = function(event) {
+    // don't set srcObject again if it is already set    
     if (remoteVideo[id] && !remoteVideo[id].srcObject) {
       // Create new remote video
       remoteVideo[id].srcObject = event.streams[0];    
       document.querySelector('.videochat').append(remoteVideo[id]);
     }
-    
-
-    // don't set srcObject again if it is already set
-    // if (!remoteVideo.srcObject)
-    //   remoteVideo.srcObject = event.streams[0];
   };
 
   console.count("Add local stream");
-  pc[id].addTrack(localStream.getAudioTracks()[0], localStream)
-  pc[id].addTrack(localStream.getVideoTracks()[0], localStream)
+  pcs[id].addTrack(localStream.getAudioTracks()[0], localStream)
+  pcs[id].addTrack(localStream.getVideoTracks()[0], localStream)
 
   remoteVideo[id] = document.createElement('video');
   remoteVideo[id].autoplay = 'true';
@@ -173,8 +166,15 @@ function onSuccess(stream) {
 
 function endCall() {
   console.log('Ending call');
-  pc.close();
-  pc = null;
+  for (let pc of Object.values(pcs)) {
+    pc.close();
+  }
+  pcs = null;
+}
+
+function endStream(id) {
+  console.log('Ending stream: ' + id);
+  pcs[id].close();
 }
 
 function logError(err) {

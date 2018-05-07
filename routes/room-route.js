@@ -15,6 +15,7 @@ module.exports = function(app, io) {
       roomId = id;
       room = app.get('rooms')[roomId];
       if (!room) return;
+
       room.users.push(socket.handshake.session.nickname);
 
       // Fill client's room userlist
@@ -25,6 +26,7 @@ module.exports = function(app, io) {
       
       console.log(socket.handshake.session.nickname + " has joined the room: " + roomId);
 
+      // Inform client that room is already in video call
       if (room.inCall) 
         socket.emit('call started');    
 
@@ -86,10 +88,9 @@ module.exports = function(app, io) {
     socket.on('start call', function(signal_room) {
       // Check if call has not already been started
       if (room.inCall) return;
+      room.inCall = true;
 
       console.log('Starting Call');
-
-      room.inCall = true;
 
       socket.join(signal_room);
 
@@ -100,7 +101,7 @@ module.exports = function(app, io) {
     socket.on('join call', function(signal_room) {
       socket.join(signal_room);
 
-      // Inform all other clients in signal_room to start a peer connection with this client
+      // Inform all other clients in signal_room to start a peer connection with this client(socket.id)
       socket.in(signal_room).emit('start signaling', socket.id);
     });
 
@@ -112,8 +113,8 @@ module.exports = function(app, io) {
       });
     });
 
-    socket.on('end call', function(signal_room) {
-      socket.in(signal_room).emit('end call');
+    socket.on('end stream', function(signal_room, id) {
+      socket.in(signal_room).emit('end stream', id);
     });
 
   });
