@@ -63,14 +63,14 @@
     border-radius: .5rem;
     cursor: pointer;
     background-image: linear-gradient($color-grey-light 0%, $color-grey-light 50%, $color-primary 50%);
-    background-size: 190%;
+    background-size: auto 190%;
     color: $color-primary;
     backface-visibility: hidden;
   }    
   
 
   &:hover {
-    background-size: 200%;
+    background-size: auto 200%;
     background-position: 0 100%;
     color: $color-white;    
     transform: translateY(-2px) scale(1.1, 1.1); 
