@@ -1,6 +1,6 @@
 'use strict';
 
-setTimeout(checkRoom, 1000);
+setTimeout(checkRoom, 1500);
 
 socket.on('room status', function(status) {
   if (status) {
