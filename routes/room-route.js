@@ -79,8 +79,8 @@ module.exports = function(app, io) {
       socket.emit('message', `[${user}]:`, `${message}`, true);
     });
 
-    socket.on('typing', function() {
-      socket.in(roomId).emit('currently typing', socket.handshake.session.nickname);
+    socket.on('typing', function(end) {
+      socket.in(roomId).emit('currently typing', socket.handshake.session.nickname, end);
     });
 
     //--------------Signaling----------------

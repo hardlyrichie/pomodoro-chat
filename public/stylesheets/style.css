@@ -9,8 +9,7 @@ html {
   font-size: 62.5%; }
 
 body {
-  box-sizing: border-box;
-  padding: 3rem; }
+  box-sizing: border-box; }
 
 body {
   font-family: "Lato", sans-serif;
@@ -142,6 +141,35 @@ body {
     background-color: #777;
     height: 1.5px; }
 
+.list {
+  list-style-type: none;
+  height: 70vh;
+  overflow-y: auto;
+  background-color: #FFEFD5;
+  border: 0.3rem solid #fab500; }
+  .list__heading {
+    border-top-left-radius: 0.5rem;
+    border-top-right-radius: 0.5rem;
+    background: #fab500;
+    padding: 1rem 2rem; }
+  .list li {
+    font-size: 1.6rem;
+    background-color: #fff;
+    transition: all .2s; }
+  .list li:nth-child(even) {
+    background: #ffb900; }
+  .list a,
+  .list a:link,
+  .list a:visited {
+    text-decoration: none;
+    color: #000;
+    display: block;
+    padding: 1rem 2rem; }
+  .list a:hover,
+  .list a:active,
+  .list a:focus {
+    outline: none; }
+
 .popup {
   position: fixed;
   height: 100vh;
@@ -172,17 +200,15 @@ body {
   left: 50%;
   transform: translate(-50%, -50%); }
 
+.page-padding {
+  padding: 3rem; }
+
 .lobby {
   background-image: linear-gradient(165deg, #f7f7f7 0%, #f7f7f7 95%, #FF6107 95%);
   height: 94vh;
   position: relative; }
   .lobby__flex > * {
     margin: 1rem 1.5rem; }
-    .lobby__flex > * > h3 {
-      border-top-left-radius: 0.5rem;
-      border-top-right-radius: 0.5rem;
-      background: #fab500;
-      padding: 1rem 2rem; }
   .lobby__flex {
     display: flex;
     justify-content: space-between;
@@ -204,29 +230,32 @@ body {
     flex: 1; }
     .lobby__userlist li {
       padding: 1rem 2rem; }
-  .lobby__list {
-    list-style-type: none;
-    height: 70vh;
-    overflow-y: auto;
-    background-color: #FFEFD5;
-    border: 0.3rem solid #fab500; }
-    .lobby__list li {
-      font-size: 1.6rem;
-      background-color: #fff;
-      transition: all .2s; }
-    .lobby__list li:nth-child(even) {
-      background: #ffb900; }
-    .lobby__list a,
-    .lobby__list a:link,
-    .lobby__list a:visited {
-      text-decoration: none;
-      color: #000;
-      display: block;
-      padding: 1rem 2rem; }
-    .lobby__list a:hover,
-    .lobby__list a:active,
-    .lobby__list a:focus {
-      outline: none; }
   .lobby__buttons {
     position: absolute;
     transform: translateY(-115%); }
+
+.container {
+  display: grid;
+  grid-template-columns: 1fr 20rem;
+  grid-gap: 0 5rem;
+  grid-template-areas: 'messageArea userlist'; }
+
+.messageArea {
+  grid-area: messageArea;
+  text-align: center;
+  height: 100%; }
+
+.userlist {
+  grid-area: userlist; }
+
+.chatBox__input {
+  font-size: 1.5rem;
+  font-family: inherit;
+  color: inherit;
+  padding: 1rem 2rem;
+  border-radius: 1rem;
+  background-color: rgba(255, 255, 255, 0.5);
+  border: 3px solid #ffb900;
+  display: inline-block;
+  transition: box-shadow .3s;
+  width: 100%; }

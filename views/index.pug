@@ -1,46 +1,47 @@
 extends layout
 
 block content
-  if !nickname
-    form.form.form--center#nickname-form
-      .form__group
-          h2.heading-secondary Choose your nickname:
-          hr
-      .form__group
-        input.form__input(type="text" id="nickname" name="nickname" required autocomplete="off")
-      button.btn.btn--fill Enter
-  else
-    script.
-      socket.emit('join', '#{nickname}');
-  
-  .lobby
-    .lobby__flex 
-      h1.heading-primary Pomodoro Chat
+  .page-padding
+    if !nickname
+      form.form.form--center#nickname-form
+        .form__group
+            h2.heading-secondary Choose your nickname:
+            hr
+        .form__group
+          input.form__input(type="text" id="nickname" name="nickname" required autocomplete="off")
+        button.btn.btn--fill Enter
+    else
+      script.
+        socket.emit('join', '#{nickname}');
+    
+    .lobby
+      .lobby__flex 
+        h1.heading-primary Pomodoro Chat
 
-      .lobby__buttons
-        button.btn-lobby.btn-lobby--create-room Create Room
-        button.btn-lobby.btn-lobby--refresh Refresh
+        .lobby__buttons
+          button.btn-lobby.btn-lobby--create-room Create Room
+          button.btn-lobby.btn-lobby--refresh Refresh
 
-      .lobby__roomlist
-        h3.heading-tertiary Rooms
-        ul.lobby__list
+        .lobby__roomlist
+          h3.heading-tertiary.list__heading Rooms
+          ul.list
 
-      .lobby__userlist
-        h3.heading-tertiary Users in Lobby
-        ul.lobby__list
+        .lobby__userlist
+          h3.heading-tertiary.list__heading Users in Lobby
+          ul.list
 
-  .popup
-    .popup__content
-      form.form.form--create-room(action="" method="POST")
-        h2.heading-secondary Create Room
-        .form__group 
-          label.form__label(for="room_name") Room Name:
-          input.form__input(type="text" id="room_name" name="room_name" required autocomplete="off")
-        .form__group     
-          label.form__label(for="password") Password:
-          input.form__input(type="password" id="password" name="password")
-        .form__group     
-          input.btn.btn--pos(type="submit" value="Create")
-          input.btn.btn--neg(type="button" value="Cancel")
+    .popup
+      .popup__content
+        form.form.form--create-room(action="" method="POST")
+          h2.heading-secondary Create Room
+          .form__group 
+            label.form__label(for="room_name") Room Name:
+            input.form__input(type="text" id="room_name" name="room_name" required autocomplete="off")
+          .form__group     
+            label.form__label(for="password") Password:
+            input.form__input(type="password" id="password" name="password")
+          .form__group     
+            input.btn.btn--pos(type="submit" value="Create")
+            input.btn.btn--neg(type="button" value="Cancel")
 
   script(src="/javascripts/index.js")

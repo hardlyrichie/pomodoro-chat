@@ -33,15 +33,17 @@ socket.on('delete room user', function(name) {
 });
 
 // ---------Message Form--------------
-let messageForm = document.querySelector('.form--message');
+let chatBox = document.querySelector('.chatBox');
 let chat = document.querySelector('.chat');
-let messagebox = document.querySelector('#messagebox');
+let chatInput = document.querySelector('.chatBox__input');
 
-messageForm.onsubmit = function(event) {
+chatBox.onsubmit = function(event) {
   event.preventDefault();
   
-  socket.emit('message', messagebox.value);
-  messagebox.value = '';
+  socket.emit('message', chatInput.value);
+  // End is typing message
+  socket.emit('typing', true);  
+  chatInput.value = '';
 }
 
 socket.on('message', function(user, message, messageType) {
@@ -58,13 +60,13 @@ function updateMessage(name, message) {
 
 // User typing message
 let debounceType = debounce(() => socket.emit('typing'), 1000); 
-messagebox.oninput = function() {
+chatInput.oninput = function() {
   debounceType();
 };
 
 let start, typingMessage, removeMessage;
 
-socket.on('currently typing', function(name) {
+socket.on('currently typing', function(name, end) {
   console.log("Currently Typing");
   if (!start) {
     start = window.performance.now();
@@ -72,17 +74,19 @@ socket.on('currently typing', function(name) {
 
   // TODO place the message elsewhere and fade in animation
 
+  if (end) {
+    clearTimeout(removeMessage);
+    remove();
+    return;
+  }
+
   if (!typingMessage) {
     typingMessage = document.createElement('li');
     typingMessage.style.color = 'green';
     typingMessage.textContent = `${name} is typing ...`;
+    chat.append(typingMessage);  
 
-    removeMessage = setTimeout(() => {
-      typingMessage.remove();
-      start = null;
-      typingMessage = null; 
-      removeMessage = null;
-    }, 2000);
+    removeMessage = setTimeout(remove, 2000);
   }
   
   // If 2 seconds pass without new type event, remove typing message
@@ -90,15 +94,15 @@ socket.on('currently typing', function(name) {
     clearTimeout(removeMessage);
 
     // Reset timer
-    removeMessage = setTimeout(() => {
-      typingMessage.remove();
-      start = null;
-      typingMessage = null; 
-      removeMessage = null;      
-    }, 2000);
-  } 
-
-  chat.append(typingMessage);
+    removeMessage = setTimeout(remove, 2000);
+  }
+  
+  function remove() {
+    typingMessage.remove();
+    start = null;
+    typingMessage = null; 
+    removeMessage = null;
+  }
 });
 
 // Debounce decorator

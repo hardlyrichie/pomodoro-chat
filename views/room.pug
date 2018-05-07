@@ -5,28 +5,29 @@ block content
     let roomId = '#{id}';
     socket.emit('join room', roomId);
 
-  h1= name
+  //- h1= name
 
-  a(href="/") Leave
+  //- a(href="/") Leave
 
-  .userlist
-    h3 Users in room
-    ul
+  .container
+    .userlist
+      h3.heading-tertiary.list__heading Users in room
+      ul.list
 
-  .messenger
-    ul.chat
-    form.form--message
-      input#messagebox(autocomplete='off')
-      button send
-  
-  .videochat
-    video.videochat__localVideo(autoplay muted)
-    //- video.videochat__remoteVideo(autoplay muted)
-    button.videochat__call Start Call
-    button.videochat__hangup Hang Up
-    button.videochat__hideVideo Hide Video
-    button.videochat__mute  Mute
-    .inCall
+    .messageArea
+      ul.chat
+      form.chatBox
+        input.chatBox__input(autocomplete='off')
+        //- button.chatBox__button send
+    
+    .videochat
+      //- video.videochat__localVideo(autoplay muted)
+      //- video.videochat__remoteVideo(autoplay muted)
+      //- button.videochat__call Start Call
+      //- button.videochat__hangup Hang Up
+      //- button.videochat__hideVideo Hide Video
+      //- button.videochat__mute  Mute
+      .inCall
 
   script(src='https://webrtc.github.io/adapter/adapter-latest.js')
   script(src="/javascripts/loading.js")

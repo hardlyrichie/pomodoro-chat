@@ -1,0 +1,39 @@
+.list {
+  &__heading {
+    border-top-left-radius: $list-border-radius;
+    border-top-right-radius: $list-border-radius;
+    background: darken($color-primary-light, 1%);
+    padding: 1rem 2rem;
+  }
+
+  list-style-type: none;
+  height: 70vh;
+  overflow-y: auto;    
+  background-color: $color-primary-complementary;
+  border: .3rem solid darken($color-primary-light, 1%);
+
+  & li {
+    font-size: $default-font-size;
+    background-color: $color-white;
+    transition: all .2s;      
+  }
+
+  & li:nth-child(even) {
+    background: $color-primary-light;
+  }
+
+  & a,
+  & a:link,
+  & a:visited {
+    text-decoration: none;
+    color: $color-black;
+    display: block;
+    padding: 1rem 2rem;
+  }
+
+  & a:hover, 
+  & a:active,
+  & a:focus {
+    outline: none;
+  }
+}
