@@ -75,8 +75,7 @@ module.exports = function(app, io) {
     // Message
     socket.on('message', function(message) {
       let user = socket.handshake.session.nickname;
-      socket.in(roomId).emit('message', `[${user}]:`, `${message}`);
-      socket.emit('message', `[${user}]:`, `${message}`, true);
+      io.in(roomId).emit('message', user, message, socket.id);
     });
 
     socket.on('typing', function(end) {
@@ -87,7 +86,7 @@ module.exports = function(app, io) {
     // Initiator joins WebRTC signaling room and informs everyone in chatroom of video call
     socket.on('start call', function(signal_room) {
       // Check if call has not already been started
-      if (room.inCall) return;
+      if (!room || room.inCall) return;
 
       room.inCall = 1;
 
@@ -123,6 +122,11 @@ module.exports = function(app, io) {
     });
 
     function leaveCall() {
+      if (room.inCall <= 1)
+        io.in(roomId).emit('can start call');
+      else
+        socket.emit('call started');
+
       socket.in(room.SIGNAL_ROOM).emit('end stream', socket.id);
       socket.leave(room.SIGNAL_ROOM);
       io.in(roomId).emit('update inCall count', --room.inCall);            

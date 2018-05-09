@@ -1,14 +1,8 @@
 'use strict';
-
-let localVideo = document.querySelector('.videochat__localVideo'); 
-let callButton = document.querySelector('.videochat__call');
-let hangupButton = document.querySelector('.videochat__hangup');
-let hideVideoButton = document.querySelector('.videochat__hideVideo');
-let muteButton = document.querySelector('.videochat__mute');
-
 let pcs = {}, remoteVideo = {};
 let localStream;
 let SIGNAL_ROOM = `${roomId}_signal`;
+let startCall = true;
 
 let constraints = {
   audio: true,
@@ -20,16 +14,29 @@ let configuration = {
   }]
 };
 
-callButton.onclick = function() {
-  callButton.disabled = true;
+showChat.onclick = function() {
+  showChat.classList.remove('notification');
+  messageArea.classList.toggle('show');
+};
+
+callButton.onclick = function() { 
+  changeDisplay();
+
+  // wait for displayVideo before call
   displayVideo()
   .then(() => {
-    console.log('Starting call');
-    socket.emit('start call', SIGNAL_ROOM);
+    if (startCall) {
+      console.log('Starting call');
+      socket.emit('start call', SIGNAL_ROOM);
+    } else {
+      console.log('Signaling Join Call');
+      socket.emit('join call', SIGNAL_ROOM); 
+    }
   });
 };
 
 hangupButton.onclick = function() {
+  changeDisplay();
   endCall();
 
   socket.emit('end stream');
@@ -39,17 +46,22 @@ hangupButton.onclick = function() {
 socket.on('call started', function() {
   console.log('call started');
   callButton.innerText = 'Join Call';
-  callButton.onclick = function() {
-    console.log('join call');   
-    callButton.disabled = true;
-    // wait for displayVideo before join call
-    displayVideo()
-      .then(() => {
-        console.log('Signaling Join Call');
-        socket.emit('join call', SIGNAL_ROOM); 
-      });
-  };
+  startCall = false;
 });
+
+// Everyone left call, can initiate call
+socket.on('can start call', function() {
+  console.log('Can start call');
+  callButton.innerHTML = '<i class=ion-ios-telephone></i>';
+  startCall = true;
+});
+
+function changeDisplay() {
+  // Change display
+  messageArea.classList.toggle('hiddenMessage');
+  textChat.classList.toggle('visibility-hidden'); 
+  videoChat.classList.toggle('display-none');  
+}
 
 socket.on('end stream', (id) => endStream(id));
 
@@ -134,7 +146,7 @@ function startSignaling(isInitiator, id) {
     if (remoteVideo[id] && !remoteVideo[id].srcObject) {
       // Create new remote video
       remoteVideo[id].srcObject = event.streams[0];    
-      document.querySelector('.videochat').append(remoteVideo[id]);
+      videoArea.append(remoteVideo[id]);
     }
   };
 
@@ -143,6 +155,7 @@ function startSignaling(isInitiator, id) {
   pcs[id].addTrack(localStream.getVideoTracks()[0], localStream)
 
   remoteVideo[id] = document.createElement('video');
+  remoteVideo[id].className = 'videoArea__remoteVideo';
   remoteVideo[id].autoplay = true;
 }
 
@@ -163,7 +176,13 @@ function hasGetUserMedia() {
 }
 
 function onSuccess(stream) {
+  localVideo = document.createElement('video');
+  localVideo.className = 'videoArea__localVideo';
+  localVideo.autoplay = true;
+  localVideo.muted = true;
   localVideo.srcObject = stream;
+  videoArea.append(localVideo);
+  
   localStream = stream;
 }
 
@@ -195,13 +214,20 @@ function endCall() {
   for (let pc of Object.values(pcs)) {
     pc.close();
   }
-  pcs = null;
+  pcs = {};
+  remoteVideo = {};
+
+  videoArea.innerHTML = '';
+  muteButton.innerHTML = '<i class=ion-android-microphone></i>';
+  hideVideoButton.innerHTML = '<i class=ion-eye></i>';
+
 }
 
 function endStream(id) {
   console.log('Ending stream: ' + id);
   pcs[id].close();
   delete pcs[id];
+  remoteVideo[id].remove();
   delete remoteVideo[id];
 }
 
@@ -220,7 +246,7 @@ hideVideoButton.onclick = function() {
     getStream:
     for (let stream of streams) {
       for (let videoTrack of stream.getVideoTracks()) {
-        hideVideoButton.innerHTML = videoTrack.enabled ? 'Show video' : 'Hide video';
+        hideVideoButton.innerHTML = videoTrack.enabled ? '<i class=ion-eye-disabled></i>' : '<i class=ion-eye></i>';
         videoTrack.enabled = !videoTrack.enabled;
         break getStream;
       }
@@ -235,7 +261,7 @@ muteButton.onclick = function() {
     getStream:
     for (let stream of streams) {
       for (let audioTrack of stream.getAudioTracks()) {
-        muteButton.innerHTML = audioTrack.enabled ? 'Unmute' : 'Mute';
+        muteButton.innerHTML = audioTrack.enabled ? '<i class=ion-android-microphone-off></i>' : '<i class=ion-android-microphone></i>';
         audioTrack.enabled = !audioTrack.enabled;
         break getStream;        
       }
@@ -243,16 +269,16 @@ muteButton.onclick = function() {
   }
 };
 
-socket.on('update inCall count', function(count) {
-  // Limit video call to 5 clients
-  if (count > 5) {
-    console.log('disabling button');
-    callButton.disabled = true;
-  } else {
-    console.log('not disabling button');    
-    callButton.disabled = false;
-  }
+// socket.on('update inCall count', function(count) {
+//   // Limit video call to 5 clients
+//   if (count > 5) {
+//     console.log('disabling button');
+//     callButton.disabled = true;
+//   } else {
+//     console.log('not disabling button');    
+//     callButton.disabled = false;
+//   }
 
-  let countDisplay = document.querySelector('.inCall');
-  countDisplay.innerHTML = `<strong>${count}</strong>`; 
-});
+//   let countDisplay = document.querySelector('.inCall');
+//   countDisplay.innerHTML = `<strong>${count}</strong>`; 
+// });

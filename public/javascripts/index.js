@@ -110,10 +110,12 @@ socket.on('delete room', function(id) {
   }
 });
 
-socket.on('update room userlist', function(roomId, count) {
-  let roomItem = document.getElementById(id);
-  if (!roomItem) return;
 
-  // TODO finish implementaion
+// I think it is update roomlist count
+// socket.on('update room userlist', function(roomId, count) {
+//   let roomItem = document.getElementById(id);
+//   if (!roomItem) return;
 
-});
+//   // TODO finish implementaion o 
+
+// });

@@ -1,7 +1,10 @@
 .list {
   &__heading {
-    border-top-left-radius: $list-border-radius;
-    border-top-right-radius: $list-border-radius;
+    &--rounded {
+      border-top-left-radius: $list-border-radius;
+      border-top-right-radius: $list-border-radius;
+    }
+    
     background: darken($color-primary-light, 1%);
     padding: 1rem 2rem;
   }

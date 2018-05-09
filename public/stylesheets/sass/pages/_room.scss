@@ -1,21 +1,65 @@
-.container {
+.textChat {
   display: grid;
-  grid-template-columns: 1fr 20rem;
+  grid-template-columns: 7rem 1fr 20rem;
+  grid-template-rows: 4rem 1fr;
   grid-gap: 0 5rem;
-  grid-template-areas: 'messageArea userlist';
+  grid-template-areas: 
+    'buttonGroup heading userlist'
+    'buttonGroup messageArea userlist'; 
+
+  & .list {
+    height: calc(100vh - 4.7rem); 
+  }
+
+  & > h1 {
+    grid-area: heading;
+    font-weight: 700;
+    font-size: 3rem;
+    margin-left: 5rem;
+  }
+}
+
+.buttonGroup {
+  grid-area: buttonGroup;
+
+  & > * {
+    margin: 1rem auto;
+  }
 }
 
 .messageArea {
   grid-area: messageArea;
-  text-align: center;
-  height: 100%;
+  // text-align: center;
 }
 
 .userlist {
   grid-area: userlist;
+
+  & li {
+    padding: 1rem 2rem;    
+  }
+}
+
+.chat {
+  list-style-type: none;
+  overflow-y: auto; 
+  min-width: 0; // prevent expanding width of grid item
+  height: 80vh;
+  position: relative;
+  padding-left: 5rem;
+  margin: 1rem 0 4rem 0;
+  font-size: $default-font-size;
+
+  & h4 {
+    display: inline-block;
+    font-weight: 700;
+    font-size: 2rem;
+  }
 }
 
 .chatBox {
+  position: relative;
+
   &__input {
     font-size: 1.5rem;
     font-family: inherit;
@@ -27,9 +71,89 @@
     display: inline-block;
     transition: box-shadow .3s;
     width: 100%;
+
+    &:focus {
+      outline: none;
+    }
+  }
+}
+
+.typing {
+  position: absolute;
+  top: -60%;
+  left: 1%;
+  color: green;
+  font-size: $default-font-size;
+}
+
+//-----------------Video Chat Display----------------
+.videoChat {
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 100vh;
+  width: 100vw;
+  background: lightcyan;
+
+  &__buttons {
+    text-align: center;
+
+    & > button {
+      display: inline-block;
+      margin: 0 3rem;
+    }
+
+    & > .videochat__hangup {
+      transform: rotate(135deg);
+    }
+  }
+}
+
+.hiddenMessage {
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 30vw;
+  transform: translateX(100%);
+  transition: transform .5s;
+  background: $color-primary-complementary;
+  height: 100vh;
+  z-index: 100;
+
+  & .chat {
+    margin: 0;
+    height: calc(100vh - 4.5rem);
+  }
+}
+
+.show {
+  transform: translateX(0);  
+}
+
+.videoArea {
+  border: 3px solid aqua;  
+  z-index: 100;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(30rem, 1fr));
+  justify-items: center;
+  justify-content: center;
+  align-items: center;
+  align-content: center;
+  height: calc(100vh - 6rem);
+  overflow: hidden;
+
+
+  &__localVideo {
+
   }
 
-  &__button {
+  &__remoteVideo {
 
   }
 }
+
+.notification {
+  background: $color-blue;
+  animation: notify .5s cubic-bezier(.45,.06,0,1.39) 6 alternate;
+}
+

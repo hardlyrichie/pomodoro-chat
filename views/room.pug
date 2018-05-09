@@ -4,34 +4,48 @@ block content
   script.
     let roomId = '#{id}';
     socket.emit('join room', roomId);
-
-  //- h1= name
-
   //- a(href="/") Leave
 
-  .container
+  .textChat
+    h1= name
+
+    .buttonGroup
+      a.btn-circle(href='/' title='Back') 
+        i.ion-android-arrow-back
+      button.btn-circle.btn-circle--green.videochat__call(title='Start/Join Call') 
+        i.ion-ios-telephone
+
+    .messageArea.visibility-visible
+      ul.chat
+      form.chatBox
+        input.chatBox__input(autocomplete='off' placeholder='Type a message here')
+
     .userlist
       h3.heading-tertiary.list__heading Users in room
       ul.list
-
-    .messageArea
-      ul.chat
-      form.chatBox
-        input.chatBox__input(autocomplete='off')
-        //- button.chatBox__button send
-    
-    .videochat
-      //- video.videochat__localVideo(autoplay muted)
-      //- video.videochat__remoteVideo(autoplay muted)
+      
+  .videoChat.display-none
+    .videoArea
+      //- video.videoArea__localVideo(autoplay muted)
+      //- //- video.videochat__remoteVideo(autoplay muted)
       //- button.videochat__call Start Call
-      //- button.videochat__hangup Hang Up
-      //- button.videochat__hideVideo Hide Video
-      //- button.videochat__mute  Mute
-      .inCall
 
+    .videoChat__buttons
+      button.btn-circle.btn-circle--red.videochat__call.videochat__hangup(title='Hang Up')
+        i.ion-ios-telephone
+      button.btn-circle.videochat__hideVideo(title='Show/Hide Video') 
+        i.ion-eye
+      button.btn-circle.videochat__mute(title='Mute/Unmute') 
+        i.ion-android-microphone
+      button.btn-circle.showChat(title='Show Chat')
+        i.ion-ios-chatbubble
+    .inCall
+
+  script(src='https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.22.1/moment.min.js')
   script(src='https://webrtc.github.io/adapter/adapter-latest.js')
-  script(src="/javascripts/loading.js")
-  script(src="/javascripts/room.js")
-  script(src="/javascripts/videochat.js")
+  script(src='/javascripts/roomElements.js')
+  script(src='/javascripts/loading.js')
+  script(src='/javascripts/room.js')
+  script(src='/javascripts/videochat.js')
   
 

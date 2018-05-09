@@ -1,5 +1,6 @@
 'use strict';
 
+// Wait to check if refreshed
 setTimeout(checkRoom, 1500);
 
 socket.on('room status', function(status) {

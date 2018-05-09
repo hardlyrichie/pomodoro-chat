@@ -1,7 +1,7 @@
 'use strict';
 
 // ----------USERLIST------------
-let userlist = document.querySelector('.userlist ul');
+let userlist = document.querySelector('.userlist > ul');
 
 socket.on('get room userlist', function(room) {
   userlist.innerHTML = '';
@@ -46,11 +46,29 @@ chatBox.onsubmit = function(event) {
   chatInput.value = '';
 }
 
-socket.on('message', function(user, message, messageType) {
-  // Your message: blue, Other messages: default(grey)
-  let color = messageType ? 'blue' : 'grey';
+socket.on('message', function(user, message, id) {
+  let date = moment().calendar();  
 
-  chat.insertAdjacentHTML('beforeend', `<li style='color:${color};'>${user} ${message}</li>`);  
+  let atBottom = (chat.scrollTop + chat.clientHeight) >= chat.scrollHeight;
+
+  if (chat.lastElementChild && chat.lastElementChild.className == id) {
+    chat.lastElementChild.innerHTML = `${chat.lastElementChild.innerHTML}<br><span style='padding: 1rem; display: inline-block;'>${message}</span>`;    
+  } else {
+    chat.insertAdjacentHTML('beforeend', `<li class=${id}><h4>${user}&emsp;</h4>${date}<br><span style='padding: 1rem; display: inline-block;'>${message}</span></li>`);    
+  }
+
+  // Message Flash Icon in video call state
+  if (messageArea.classList.contains('hiddenMessage') && !messageArea.classList.contains('show')) {
+    showChat.classList.add('notification');
+  } else {
+    // TODO Alert Sound
+  }
+
+  // Check overflow
+  if (chat.scrollHeight > chat.clientHeight && atBottom) {
+    console.log('OVERFLOW!');
+    scrollDown();    
+  }
 });
 
 // New user joined message
@@ -72,8 +90,6 @@ socket.on('currently typing', function(name, end) {
     start = window.performance.now();
   }
 
-  // TODO place the message elsewhere and fade in animation
-
   if (end) {
     clearTimeout(removeMessage);
     remove();
@@ -81,10 +97,10 @@ socket.on('currently typing', function(name, end) {
   }
 
   if (!typingMessage) {
-    typingMessage = document.createElement('li');
-    typingMessage.style.color = 'green';
+    typingMessage = document.createElement('p');
+    typingMessage.className = 'typing';
     typingMessage.textContent = `${name} is typing ...`;
-    chat.append(typingMessage);  
+    chatBox.append(typingMessage);  
 
     removeMessage = setTimeout(remove, 2000);
   }
@@ -98,12 +114,21 @@ socket.on('currently typing', function(name, end) {
   }
   
   function remove() {
-    typingMessage.remove();
+    if (typingMessage)
+      typingMessage.remove();
     start = null;
     typingMessage = null; 
     removeMessage = null;
   }
 });
+
+function scrollDown() {
+  if (chat.scrollTop + chat.clientHeight >= chat.scrollHeight) return;
+
+  console.log('Current Scroll: ' + chat.scrollTop + ' client height: ' + chat.clientHeight + ' scroll Height' + chat.scrollHeight);
+  chat.scrollBy(0, 5);
+  setTimeout(scrollDown, 10);
+}
 
 // Debounce decorator
 function debounce(f, ms) {
