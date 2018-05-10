@@ -135,12 +135,12 @@
   z-index: 100;
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(64rem, 1fr));
-  justify-items: center;
-  justify-content: center;
-  align-items: center;
-  align-content: center;
+  // justify-items: center;
+  // justify-content: center;
+  // align-items: center;
+  // align-content: center;
   height: calc(100vh - 6rem);
-  overflow: hidden;
+  // overflow: hidden;
 
 
   &__localVideo {

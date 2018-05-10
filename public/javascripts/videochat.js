@@ -145,7 +145,7 @@ function startSignaling(isInitiator, id) {
     // don't set srcObject again if it is already set    
     if (remoteVideo[id] && !remoteVideo[id].srcObject) {
       // Create new remote video
-      remoteVideo[id].srcObject = event.streams[0];    
+      remoteVideo[id].srcObject = event.streams[0];
       videoArea.append(remoteVideo[id]);
     }
   };

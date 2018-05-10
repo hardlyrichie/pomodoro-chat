@@ -1,9 +1,13 @@
 'use strict';
 
+socket.emit('join room', roomId);
+
 // ----------USERLIST------------
 let userlist = document.querySelector('.userlist > ul');
 
 socket.on('get room userlist', function(room) {
+  console.log('displaying room userlist');
+
   userlist.innerHTML = '';
 
   for (let user of room.users) {

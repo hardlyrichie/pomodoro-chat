@@ -3,8 +3,6 @@ extends layout
 block content
   script.
     let roomId = '#{id}';
-    socket.emit('join room', roomId);
-  //- a(href="/") Leave
 
   .textChat
     h1= name
@@ -44,8 +42,7 @@ block content
   script(src='https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.22.1/moment.min.js')
   script(src='https://webrtc.github.io/adapter/adapter-latest.js')
   script(src='/javascripts/roomElements.js')
-  script(src='/javascripts/loading.js')
   script(src='/javascripts/room.js')
   script(src='/javascripts/videochat.js')
-  
+  script(src='/javascripts/loading.js')  
 

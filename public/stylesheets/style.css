@@ -264,8 +264,8 @@ body {
 
 video {
   transform: rotateY(180deg);
-  object-fit: contain;
-  width: 100%; }
+  width: 100%;
+  max-height: 100%; }
 
 .page-padding {
   padding: 3rem; }
@@ -402,12 +402,7 @@ video {
   z-index: 100;
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(64rem, 1fr));
-  justify-items: center;
-  justify-content: center;
-  align-items: center;
-  align-content: center;
-  height: calc(100vh - 6rem);
-  overflow: hidden; }
+  height: calc(100vh - 6rem); }
 
 .notification {
   background: #2196f3;
