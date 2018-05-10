@@ -135,8 +135,9 @@
   z-index: 100;
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(64rem, 1fr));
-  grid-gap: 0 1rem;
+  grid-gap: 3rem 0;
   justify-items: center;
+  justify-content: center;
   align-items: center;
   height: calc(100vh - 6rem);
   // overflow: hidden;

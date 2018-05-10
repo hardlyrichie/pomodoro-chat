@@ -259,6 +259,8 @@ muteButton.onclick = function() {
   for (let pc of Object.values(pcs)) {
     let streams = pc.getLocalStreams();
     getStream:
+
+    //something wrong here
     for (let stream of streams) {
       for (let audioTrack of stream.getAudioTracks()) {
         muteButton.innerHTML = audioTrack.enabled ? '<i class=ion-android-microphone-off></i>' : '<i class=ion-android-microphone></i>';
