@@ -94,6 +94,7 @@
   height: 100vh;
   width: 100vw;
   background: lightcyan;
+  transition: width .5s;
 
   &__buttons {
     text-align: center;
@@ -126,8 +127,12 @@
   }
 }
 
-.show {
+.showMessage {
   transform: translateX(0);  
+}
+
+.shrinkVideo {
+  width: 70vw;
 }
 
 .videoArea {

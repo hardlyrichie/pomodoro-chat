@@ -16,7 +16,8 @@ let configuration = {
 
 showChat.onclick = function() {
   showChat.classList.remove('notification');
-  messageArea.classList.toggle('show');
+  videoChat.classList.toggle('shrinkVideo');
+  messageArea.classList.toggle('showMessage');
 };
 
 callButton.onclick = function() { 
