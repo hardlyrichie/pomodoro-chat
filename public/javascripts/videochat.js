@@ -177,7 +177,7 @@ function hasGetUserMedia() {
 
 function onSuccess(stream) {
   localVideo = document.createElement('video');
-  localVideo.className = 'videoArea__localVideo';
+  localVideo.classList.add('videoArea__localVideo', 'center');
   localVideo.autoplay = true;
   localVideo.muted = true;
   localVideo.srcObject = stream;
