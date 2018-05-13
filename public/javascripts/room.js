@@ -86,12 +86,12 @@ chatInput.oninput = function() {
   debounceType();
 };
 
-let start, typingMessage, removeMessage;
+let startTyping, typingMessage, removeMessage;
 
 socket.on('currently typing', function(name, end) {
   console.log("Currently Typing");
-  if (!start) {
-    start = window.performance.now();
+  if (!startTyping) {
+    startTyping = window.performance.now();
   }
 
   if (end) {
@@ -110,7 +110,7 @@ socket.on('currently typing', function(name, end) {
   }
   
   // If 2 seconds pass without new type event, remove typing message
-  if (window.performance.now() - start < 2000) {
+  if (window.performance.now() - startTyping < 2000) {
     clearTimeout(removeMessage);
 
     // Reset timer
@@ -120,7 +120,7 @@ socket.on('currently typing', function(name, end) {
   function remove() {
     if (typingMessage)
       typingMessage.remove();
-    start = null;
+    startTyping = null;
     typingMessage = null; 
     removeMessage = null;
   }

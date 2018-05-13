@@ -26,7 +26,7 @@ app.use(session);
 io.use(sharedsession(session)); 
 
 // ROUTES
-let indexRouter = require('./routes/index-route.js')(app, io);
+let indexRouter = require('./routes/index-route')(app, io);
 let roomRouter = require('./routes/room-route')(app, io);
 
 // view engine setup

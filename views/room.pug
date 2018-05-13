@@ -23,10 +23,20 @@ block content
       ul.list
       
   .videoChat.display-none
+    .pomodoro
+      h1.pomodoro__timer 25:00
+      .pomodoro__timing-buttons
+        button.pomodoro__start(data-action='start') Start
+        button.pomodoro__stop(data-action='stop') Stop
+        button.pomodoro__reset(data-action='reset') Reset
+      .pomodoro__break-buttons
+        button(data-action='short') Short Break
+        button(data-action='long') Long Break
+        button(data-action='skip') Skip Break
+      audio.ring
+        source(src='/ring.mp3' type='audio/mpeg')      
+
     .videoArea
-      //- video.videoArea__localVideo(autoplay muted)
-      //- //- video.videochat__remoteVideo(autoplay muted)
-      //- button.videochat__call Start Call
 
     .videoChat__buttons
       button.btn-circle.btn-circle--red.videochat__call.videochat__hangup(title='Hang Up')
@@ -37,6 +47,7 @@ block content
         i.ion-android-microphone
       button.btn-circle.showChat(title='Show Chat')
         i.ion-ios-chatbubble
+        
     .inCall
 
   script(src='https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.22.1/moment.min.js')
@@ -44,5 +55,6 @@ block content
   script(src='/javascripts/roomElements.js')
   script(src='/javascripts/room.js')
   script(src='/javascripts/videochat.js')
+  script(src='/javascripts/pomodoro.js')
   script(src='/javascripts/loading.js')  
 

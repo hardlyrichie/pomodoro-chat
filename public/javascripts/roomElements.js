@@ -1,3 +1,5 @@
+'use strict';
+
 // VIDEO ELEMENTS
 let localVideo;
 let callButton = document.querySelector('.videochat__call');

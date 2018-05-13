@@ -3,10 +3,10 @@
 module.exports = function(app, io) {
   let express = require('express');
   let router = express.Router();
-  let bcrypt = require('bcrypt'); 
+  let bcrypt = require('bcrypt');
 
   io.on('connection', function(socket) {
-    let room, roomId;
+    let room, roomId, pomodoro;
 
     // Join room
     socket.on('join room', function(id) {
@@ -95,6 +95,9 @@ module.exports = function(app, io) {
       room.SIGNAL_ROOM = signal_room;
 
       socket.join(signal_room);
+      
+      // Setup pomodoro system now that in videochat
+      pomodoro = require('../helpers/countdown')(io, signal_room, 25); 
 
       // TODO upon leaving chatroom, leave ALL rooms!!
       socket.in(roomId).emit('call started');
@@ -103,6 +106,9 @@ module.exports = function(app, io) {
 
     socket.on('join call', function() {
       socket.join(room.SIGNAL_ROOM);
+
+      // Setup pomodoro system now that in videochat
+      pomodoro = require('../helpers/countdown')(io, room.SIGNAL_ROOM, 25); 
 
       // Inform all other clients in signal_room to start a peer connection with this client(socket.id)
       socket.in(room.SIGNAL_ROOM).emit('start signaling', socket.id);
@@ -131,6 +137,22 @@ module.exports = function(app, io) {
       socket.leave(room.SIGNAL_ROOM);
       io.in(roomId).emit('update inCall count', --room.inCall);            
     }
+
+    socket.on('pomodoro', function(action) {
+      // switch (action) {
+      //   case 'start':
+      //     pomodoro.start();
+      //     break;
+      //   case 'stop':
+      //     pomodoro.stop();
+      //     break;
+      //   case 'reset':
+      //     pomodoro.
+      // }
+      console.log(pomodoro);
+      pomodoro[action]();
+    });
+
   });
 
   // Check nickname entered middleware
