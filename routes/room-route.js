@@ -97,7 +97,7 @@ module.exports = function(app, io) {
       socket.join(signal_room);
       
       // Setup pomodoro system now that in videochat
-      room.pomodoro = require('../helpers/countdown')(io, signal_room, 25); 
+      room.pomodoro = require('../helpers/countdown')(io, signal_room, room.breakLength, 25); 
 
       // TODO upon leaving chatroom, leave ALL rooms!!
       socket.in(roomId).emit('call started');
@@ -139,12 +139,8 @@ module.exports = function(app, io) {
       io.in(roomId).emit('update inCall count', --room.inCall);            
     }
 
-    socket.on('pomodoro', function(action, ...args) {
-      if (args) {
-        room.pomodoro[action](args);                
-      } else {
-        room.pomodoro[action]();        
-      }
+    socket.on('pomodoro', function(action) {
+      room.pomodoro[action]();        
     });
 
   });

@@ -5,6 +5,8 @@ module.exports = function(app, io) {
   let uuidv1 = require('uuid/v1');
   let bcrypt = require('bcrypt');
   let router = express.Router();
+  const { body, validationResult } = require('express-validator/check');
+  const { sanitizeBody } = require('express-validator/filter');
 
   let users = {};
   // room { name: name, users: [], inCall: boolean }
@@ -61,16 +63,29 @@ module.exports = function(app, io) {
   });
 
   /* POST create room */
-  router.post('/', function(req, res) {
+  router.post('/', 
+    // Validate Fields
+    body('room_name').trim().isLength({ min: 1 }).withMessage('Room name must be specified'),
+    body('short').isFloat({ min: 0, max: 999}).withMessage('Break length must be between 0 and 999 minutes'),
+    body('long').isFloat({ min: 0, max: 999}).withMessage('Break length must be between 0 and 999 minutes'),
+    
+    // Sanitize Fields
+    sanitizeBody('password').trim().escape(),
+
+    function(req, res) {
     // Create new room id and store room name
     let id = uuidv1();
     let name = req.body.room_name;
     
-    let password = req.body.password.trim();
+    let password = req.body.password;
 
     rooms[id] = { 
       name, // room name
       users: [], // list of users
+      breakLength: {
+        short: req.body.short,
+        long: req.body.long
+      },
       inCall: null, // count of number of users in video call
       SIGNAL_ROOM: null, // name of signaling room `${roomId}_signal`
       pomodoro: null // pomodoro object that contains countdown functionality

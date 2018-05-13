@@ -1,6 +1,6 @@
 'use strict';
 
-module.exports = function(io, signal_room, interval) {
+module.exports = function(io, signal_room, breakLength, interval) {
   class Countdown {
     constructor(interval) {
       this._tick;
@@ -41,9 +41,22 @@ module.exports = function(io, signal_room, interval) {
       io.in(signal_room).emit('setTime', `${this._interval < 10 ? "0" + this._interval : this._interval}:00`);
     }
 
-    break(interval) {
-      this._interval = interval[0];
-      
+    short() {
+      this._interval = breakLength.short;
+      this.break();
+    }
+
+    long() {
+      this.interval = breakLength.long;
+      this.break();      
+    }
+
+    skip() {
+      this.interval = interval;
+      this.break();
+    }
+
+    break() {
       this.clearTimer();
       this.start();
     }

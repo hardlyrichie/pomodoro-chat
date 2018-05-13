@@ -41,6 +41,12 @@ block content
             label.form__label(for="password") Password:
             input.form__input(type="password" id="password" name="password")
           .form__group     
+            label.form__label(for="short") Short Break (minutes):
+            input.form__input(type="number" id="short" name="short" value="5" min="0" step="1")
+          .form__group     
+            label.form__label(for="long") Long Break (minutes):
+            input.form__input(type="number" id="long" name="long" value="15" min="0" step="1")
+          .form__group     
             input.btn.btn--pos(type="submit" value="Create")
             input.btn.btn--neg(type="button" value="Cancel")
 
