@@ -4,7 +4,7 @@ module.exports = function(io, signal_room, interval) {
   class Countdown {
     constructor(interval) {
       this._tick;
-      this._timeLeft;
+      this._timeLeft; // in seconds
       this._interval = interval;
     }
   
@@ -15,9 +15,20 @@ module.exports = function(io, signal_room, interval) {
     set interval(interval) {
       this._interval = interval;
     }
+
+    // return timeLeft formatted
+    get timeLeft() {
+      let [minutes, seconds] = this.formatTime(this._timeLeft);
+      
+      return `${minutes}:${seconds}`;
+    }
+
+    get isCounting() {
+      return this._tick ? true : false;
+    }
   
     start() {
-      this._timeleft ? this.countdown(this._timeleft) : this.countdown(this._interval * 60);
+      this._timeLeft ? this.countdown(this._timeLeft) : this.countdown(this._interval * 60);
     }
   
     stop() {
@@ -34,7 +45,7 @@ module.exports = function(io, signal_room, interval) {
       if (this._tick) {
         clearInterval(this._tick);
         this._tick = null;
-        this._timeleft = null;
+        this._timeLeft = null;
       }
     }
   
@@ -49,21 +60,27 @@ module.exports = function(io, signal_room, interval) {
   
     displayTime(endTime) {
       // convert to seconds and floors to int
-      this._timeleft = ((endTime - Date.now() + 100) / 1000) | 0;
-     
-      let minutes =  this._timeleft / 60 | 0;
-      let seconds =  this._timeleft % 60 | 0;
-      
-      minutes = minutes < 10 ? "0" + minutes : minutes;
-      seconds = seconds < 10 ? "0" + seconds : seconds;
+      this._timeLeft = ((endTime - Date.now() + 100) / 1000) | 0;
+
+      let [minutes, seconds] = this.formatTime(this._timeLeft);
       
       io.in(signal_room).emit('time', `${minutes}:${seconds}`)
       
-      if (this._timeleft <= 0 && this._tick) {
+      if (this._timeLeft <= 0 && this._tick) {
         clearInterval(this._tick);
         this._tick = null;
-        this._timeleft = null;
+        this._timeLeft = null;
       }
+    }
+
+    formatTime(time) {
+      let minutes =  time / 60 | 0;
+      let seconds =  time % 60 | 0;
+      
+      minutes = minutes < 10 ? "0" + minutes : minutes;
+      seconds = seconds < 10 ? "0" + seconds : seconds;
+
+      return [minutes, seconds];
     }
   }
 

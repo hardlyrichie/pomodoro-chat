@@ -110,6 +110,10 @@ module.exports = function(app, io) {
       // Setup pomodoro system now that in videochat
       pomodoro = require('../helpers/countdown')(io, room.SIGNAL_ROOM, 25); 
 
+      if (pomodoro.isCounting) {
+        socket.emit('time', pomodoro.timeLeft);
+      }
+
       // Inform all other clients in signal_room to start a peer connection with this client(socket.id)
       socket.in(room.SIGNAL_ROOM).emit('start signaling', socket.id);
       io.in(roomId).emit('update inCall count', ++room.inCall);            
@@ -149,7 +153,6 @@ module.exports = function(app, io) {
       //   case 'reset':
       //     pomodoro.
       // }
-      console.log(pomodoro);
       pomodoro[action]();
     });
 
