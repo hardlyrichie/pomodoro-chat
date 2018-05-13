@@ -29,8 +29,7 @@ class Pomodoro {
     if (action == 'short' || action == 'long' || action == 'skip') {
       let interval = action == 'short' ? 5 : (action == 'long' ? 15 : 25);
 
-      this.clearTimer();
-      this.start();
+      socket.emit('pomodoro', 'break', interval)
     } else {
       this[action]();
     }

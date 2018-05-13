@@ -142,18 +142,12 @@ module.exports = function(app, io) {
       io.in(roomId).emit('update inCall count', --room.inCall);            
     }
 
-    socket.on('pomodoro', function(action) {
-      // switch (action) {
-      //   case 'start':
-      //     pomodoro.start();
-      //     break;
-      //   case 'stop':
-      //     pomodoro.stop();
-      //     break;
-      //   case 'reset':
-      //     pomodoro.
-      // }
-      pomodoro[action]();
+    socket.on('pomodoro', function(action, ...args) {
+      if (args) {
+        pomodoro[action](args);                
+      } else {
+        pomodoro[action]();        
+      }
     });
 
   });

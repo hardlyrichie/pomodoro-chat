@@ -40,6 +40,13 @@ module.exports = function(io, signal_room, interval) {
       
       io.in(signal_room).emit('time', `${this._interval < 10 ? "0" + this._interval : this._interval}:00`);
     }
+
+    break(interval) {
+      this._interval = interval[0];
+      
+      this.clearTimer();
+      this.start();
+    }
   
     clearTimer() {
       if (this._tick) {
