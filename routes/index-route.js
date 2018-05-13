@@ -69,8 +69,11 @@ module.exports = function(app, io) {
     let password = req.body.password.trim();
 
     rooms[id] = { 
-      name,
-      users: []
+      name, // room name
+      users: [], // list of users
+      inCall: null, // count of number of users in video call
+      SIGNAL_ROOM: null, // name of signaling room `${roomId}_signal`
+      pomodoro: null // pomodoro object that contains countdown functionality
     };
 
     storePassword(password, id).then(() => {

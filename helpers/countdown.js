@@ -38,7 +38,7 @@ module.exports = function(io, signal_room, interval) {
     reset() {
       this.clearTimer();
       
-      io.in(signal_room).emit('time', `${this._interval < 10 ? "0" + this._interval : this._interval}:00`);
+      io.in(signal_room).emit('setTime', `${this._interval < 10 ? "0" + this._interval : this._interval}:00`);
     }
 
     break(interval) {
@@ -71,7 +71,7 @@ module.exports = function(io, signal_room, interval) {
 
       let [minutes, seconds] = this.formatTime(this._timeLeft);
       
-      io.in(signal_room).emit('time', `${minutes}:${seconds}`)
+      io.in(signal_room).emit('setTime', `${minutes}:${seconds}`)
       
       if (this._timeLeft <= 0 && this._tick) {
         clearInterval(this._tick);

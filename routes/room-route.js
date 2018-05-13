@@ -6,7 +6,7 @@ module.exports = function(app, io) {
   let bcrypt = require('bcrypt');
 
   io.on('connection', function(socket) {
-    let room, roomId, pomodoro;
+    let room, roomId;
 
     // Join room
     socket.on('join room', function(id) {
@@ -97,7 +97,7 @@ module.exports = function(app, io) {
       socket.join(signal_room);
       
       // Setup pomodoro system now that in videochat
-      pomodoro = require('../helpers/countdown')(io, signal_room, 25); 
+      room.pomodoro = require('../helpers/countdown')(io, signal_room, 25); 
 
       // TODO upon leaving chatroom, leave ALL rooms!!
       socket.in(roomId).emit('call started');
@@ -107,11 +107,8 @@ module.exports = function(app, io) {
     socket.on('join call', function() {
       socket.join(room.SIGNAL_ROOM);
 
-      // Setup pomodoro system now that in videochat
-      pomodoro = require('../helpers/countdown')(io, room.SIGNAL_ROOM, 25); 
-
-      if (pomodoro.isCounting) {
-        socket.emit('time', pomodoro.timeLeft);
+      if (room.pomodoro.isCounting) {
+        socket.emit('setTime', room.pomodoro.timeLeft);
       }
 
       // Inform all other clients in signal_room to start a peer connection with this client(socket.id)
@@ -144,9 +141,9 @@ module.exports = function(app, io) {
 
     socket.on('pomodoro', function(action, ...args) {
       if (args) {
-        pomodoro[action](args);                
+        room.pomodoro[action](args);                
       } else {
-        pomodoro[action]();        
+        room.pomodoro[action]();        
       }
     });
 

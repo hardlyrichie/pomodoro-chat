@@ -38,7 +38,7 @@ class Pomodoro {
 
 new Pomodoro(pomodoro);
 
-socket.on('time', function(time) {
+socket.on('setTime', function(time) {
   timer.textContent = time;
 
   if (time == '00:00') {
