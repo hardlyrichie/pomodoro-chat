@@ -52,13 +52,22 @@ body {
   margin-bottom: 1rem !important; }
 
 .visibility-hidden {
-  visibility: hidden; }
+  visibility: hidden !important; }
 
 .visibility-visible {
-  visibility: visible; }
+  visibility: visible !important; }
 
 .display-none {
-  display: none; }
+  display: none !important; }
+
+.background-green {
+  background-color: #50c878 !important; }
+
+.background-red {
+  background-color: #c21807 !important; }
+
+.background-blue {
+  background-color: #2196f3 !important; }
 
 .btn, .btn:link, .btn:visited {
   text-decoration: none;
@@ -169,6 +178,28 @@ body {
 .btn-circle--red {
   background-color: #c21807; }
 
+.btn-rect, .btn-rect:link, .btn-rect:visited {
+  text-decoration: none;
+  padding: 1rem;
+  display: inline-block;
+  transition: transform .2s, box-shadow .2s;
+  font-size: 1.6rem;
+  background: #777;
+  color: #fff;
+  border: none;
+  cursor: pointer; }
+
+.btn-rect:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 1rem 2rem rgba(0, 0, 0, 0.2); }
+
+.btn-rect:active {
+  transform: translateY(0);
+  box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.2); }
+
+.btn-rect:active, .btn-rect:focus {
+  outline: none; }
+
 .form {
   padding: 5rem;
   border: 1px solid black;
@@ -234,6 +265,14 @@ body {
 
 .pomodoro {
   text-align: center; }
+  .pomodoro__display {
+    position: relative;
+    display: inline-block; }
+  .pomodoro__label {
+    position: absolute;
+    top: 50%;
+    left: 0;
+    transform: translate(-150%, -50%); }
 
 .popup {
   position: fixed;
@@ -405,7 +444,6 @@ video {
   width: 70vw; }
 
 .videoArea {
-  border: 3px solid aqua;
   z-index: 100;
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(64rem, 1fr));
@@ -413,7 +451,7 @@ video {
   justify-items: center;
   justify-content: center;
   align-items: center;
-  height: calc(100vh - 6rem); }
+  height: calc(100vh - 17.8rem - 6rem); }
 
 .notification {
   background: #2196f3;

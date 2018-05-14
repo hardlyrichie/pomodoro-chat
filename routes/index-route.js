@@ -66,6 +66,7 @@ module.exports = function(app, io) {
   router.post('/', 
     // Validate Fields
     body('room_name').trim().isLength({ min: 1 }).withMessage('Room name must be specified'),
+    body('session').isFloat({ min: 0, max: 999}).withMessage('Session length must be between 0 and 999 minutes'),
     body('short').isFloat({ min: 0, max: 999}).withMessage('Break length must be between 0 and 999 minutes'),
     body('long').isFloat({ min: 0, max: 999}).withMessage('Break length must be between 0 and 999 minutes'),
     
@@ -82,7 +83,8 @@ module.exports = function(app, io) {
     rooms[id] = { 
       name, // room name
       users: [], // list of users
-      breakLength: {
+      settings: {
+        session: req.body.session,
         short: req.body.short,
         long: req.body.long
       },

@@ -1,3 +1,15 @@
 .pomodoro {
   text-align: center;
+
+  &__display {
+    position: relative;
+    display: inline-block;
+  }
+
+  &__label {
+    position: absolute;
+    top: 50%;
+    left: 0;
+    transform: translate(-150%, -50%);
+  }
 }

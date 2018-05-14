@@ -136,7 +136,7 @@
 }
 
 .videoArea {
-  border: 3px solid aqua;  
+  // border: 3px solid aqua;  
   z-index: 100;
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(64rem, 1fr));
@@ -144,7 +144,7 @@
   justify-items: center;
   justify-content: center;
   align-items: center;
-  height: calc(100vh - 6rem);
+  height: calc(100vh - 17.8rem - 6rem); // 17.8rem from pomodoro, 6rem from videoChat_buttons
 }
 
 .notification {

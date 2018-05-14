@@ -97,11 +97,8 @@ module.exports = function(app, io) {
       socket.join(signal_room);
       
       // Setup pomodoro system now that in videochat
-      room.pomodoro = require('../helpers/countdown')(io, signal_room, room.breakLength, 25); 
-
-      // room.pomodoro = require('../helpers/countdown')(); 
+      room.pomodoro = require('../helpers/countdown')(io, signal_room, room.settings); 
       
-
       // TODO upon leaving chatroom, leave ALL rooms!!
       socket.in(roomId).emit('call started');
       io.in(roomId).emit('update inCall count', room.inCall);            
@@ -112,6 +109,7 @@ module.exports = function(app, io) {
 
       if (room.pomodoro.isCounting) {
         socket.emit('setTime', room.pomodoro.timeLeft);
+        socket.emit('display label', room.pomodoro.type);
       }
 
       // Inform all other clients in signal_room to start a peer connection with this client(socket.id)
@@ -201,11 +199,19 @@ module.exports = function(app, io) {
     function(req, res) {
       console.log("App Rooms: " + JSON.stringify(app.get('rooms'), function(key, value) {
         console.log(`${key}: ${value}`);
-        // return (key == 'pomodoro') ? undefined: value;
         return value;
       }));
 
-      res.render('room', { id: req.params.id , name: req.room.name });
+      // Format session time
+      let minutes =  req.room.settings.session | 0;
+      let seconds =  req.room.settings.session * 60 % 60 | 0;
+      
+      minutes = minutes < 10 ? "0" + minutes : minutes;
+      seconds = seconds < 10 ? "0" + seconds : seconds;
+
+      let session = `${minutes}:${seconds}`;
+
+      res.render('room', { id: req.params.id , name: req.room.name, session: session });
   });
 
   /* POST password room */

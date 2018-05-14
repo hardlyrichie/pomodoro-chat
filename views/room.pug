@@ -10,7 +10,7 @@ block content
     .buttonGroup
       a.btn-circle(href='/' title='Back') 
         i.ion-android-arrow-back
-      button.btn-circle.btn-circle--green.videochat__call(title='Start/Join Call') 
+      button.btn-circle.background-green.videochat__call(title='Start/Join Call') 
         i.ion-ios-telephone
 
     .messageArea.visibility-visible
@@ -24,22 +24,24 @@ block content
       
   .videoChat.display-none
     .pomodoro
-      h1.heading-primary.pomodoro__timer 25:00
+      .pomodoro__display
+        h1.heading-primary.pomodoro__timer= session
+        .pomodoro__label SESSION
       .pomodoro__timing-buttons
-        button.btn.pomodoro__start(data-action='start') Start
-        button.btn.pomodoro__stop(data-action='stop') Stop
-        button.btn.pomodoro__reset(data-action='reset') Reset
-      .pomodoro__break-buttons
-        button.btn(data-action='short') Short Break
-        button.btn(data-action='long') Long Break
-        button.btn(data-action='skip') Skip Break
+        button.btn-rect.background-green(data-action='start') Start
+        button.btn-rect.background-red(data-action='stop') Stop
+        button.btn-rect(data-action='reset') Reset
+      .pomodoro__break-buttons.visibility-hidden
+        button.btn-rect.background-blue(data-action='short') Short Break
+        button.btn-rect.background-blue(data-action='long') Long Break
+        button.btn-rect.background-blue(data-action='skip') Skip Break
       audio.ring
         source(src='/ring.mp3' type='audio/mpeg')      
 
     .videoArea
 
     .videoChat__buttons
-      button.btn-circle.btn-circle--red.videochat__call.videochat__hangup(title='Hang Up')
+      button.btn-circle.background-red.videochat__call.videochat__hangup(title='Hang Up')
         i.ion-ios-telephone
       button.btn-circle.videochat__hideVideo(title='Show/Hide Video') 
         i.ion-eye

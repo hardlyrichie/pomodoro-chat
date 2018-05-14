@@ -2,7 +2,11 @@
 .u-margin-bottom-medium { margin-bottom: 4rem !important; }
 .u-margin-bottom-small { margin-bottom: 1rem !important; }
 
-.visibility-hidden { visibility: hidden; }
-.visibility-visible { visibility: visible; }
+.visibility-hidden { visibility: hidden !important; }
+.visibility-visible { visibility: visible !important; }
 
-.display-none { display: none; }
+.display-none { display: none !important; }
+
+.background-green { background-color: $color-green !important; }
+.background-red { background-color: $color-red !important; }
+.background-blue { background-color: $color-blue!important; }
