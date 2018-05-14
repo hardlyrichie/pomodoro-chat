@@ -24,15 +24,15 @@ block content
       
   .videoChat.display-none
     .pomodoro
-      h1.pomodoro__timer 25:00
+      h1.heading-primary.pomodoro__timer 25:00
       .pomodoro__timing-buttons
-        button.pomodoro__start(data-action='start') Start
-        button.pomodoro__stop(data-action='stop') Stop
-        button.pomodoro__reset(data-action='reset') Reset
+        button.btn.pomodoro__start(data-action='start') Start
+        button.btn.pomodoro__stop(data-action='stop') Stop
+        button.btn.pomodoro__reset(data-action='reset') Reset
       .pomodoro__break-buttons
-        button(data-action='short') Short Break
-        button(data-action='long') Long Break
-        button(data-action='skip') Skip Break
+        button.btn(data-action='short') Short Break
+        button.btn(data-action='long') Long Break
+        button.btn(data-action='skip') Skip Break
       audio.ring
         source(src='/ring.mp3' type='audio/mpeg')      
 

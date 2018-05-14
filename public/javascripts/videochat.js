@@ -159,6 +159,8 @@ function startSignaling(isInitiator, id) {
   remoteVideo[id] = document.createElement('video');
   remoteVideo[id].className = 'videoArea__remoteVideo';
   remoteVideo[id].autoplay = true;
+
+  remoteVideo[id].muted = true;
 }
 
 function displayVideo() {

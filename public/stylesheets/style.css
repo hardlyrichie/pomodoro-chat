@@ -232,6 +232,9 @@ body {
   .list a:focus {
     outline: none; }
 
+.pomodoro {
+  text-align: center; }
+
 .popup {
   position: fixed;
   height: 100vh;

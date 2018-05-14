@@ -1,19 +1,23 @@
 'use strict';
 
-module.exports = function(io, signal_room, breakLength, interval) {
+module.exports = function(io, signal_room, breakLength, length) {
+  // closure stores reference to setInterval (so not to have circular references and prevent memory leaks)
+  let interval;
+
   class Countdown {
-    constructor(interval) {
-      this._tick;
+    constructor(length) {
       this._timeLeft; // in seconds
-      this._interval = interval;
+      this._length = length;   
+
+      console.log('Initialize ' + signal_room + ' countdown');
     }
   
-    get interval() {
-      return this._interval;
+    get length() {
+      return this._length;
     }
   
-    set interval(interval) {
-      this._interval = interval;
+    set length(length) {
+      this._length = length;
     }
 
     // return timeLeft formatted
@@ -24,47 +28,48 @@ module.exports = function(io, signal_room, breakLength, interval) {
     }
 
     get isCounting() {
-      return this._tick ? true : false;
+      return interval ? true : false;
     }
   
     start() {
-      this._timeLeft ? this.countdown(this._timeLeft) : this.countdown(this._interval * 60);
+      this._timeLeft ? this.countdown(this._timeLeft) : this.countdown(this._length * 60); // converts length from minutes to seconds
     }
   
     stop() {
-      clearInterval(this._tick);    
+      clearInterval(interval);    
     }
   
     reset() {
       this.clearTimer();
       
-      io.in(signal_room).emit('setTime', `${this._interval < 10 ? "0" + this._interval : this._interval}:00`);
+      io.in(signal_room).emit('setTime', `${this._length < 10 ? "0" + this._length : this._length}:00`);
     }
 
     short() {
-      this._interval = breakLength.short;
+      this._length = breakLength.short;
       this.break();
     }
 
     long() {
-      this.interval = breakLength.long;
+      this._length = breakLength.long;
       this.break();      
     }
 
     skip() {
-      this.interval = interval;
+      this._length = length;
       this.break();
     }
 
+    // Start or skip break
     break() {
       this.clearTimer();
       this.start();
     }
   
     clearTimer() {
-      if (this._tick) {
-        clearInterval(this._tick);
-        this._tick = null;
+      if (interval) {
+        clearInterval(interval);
+        interval = null;
         this._timeLeft = null;
       }
     }
@@ -73,7 +78,9 @@ module.exports = function(io, signal_room, breakLength, interval) {
     countdown(time) {
       let endTime = Date.now() + time * 1000;
       this.displayTime(endTime);
-      this._tick = setInterval(() => {  
+
+      // store countdown timer in intervals
+      interval = setInterval(() => {  
         this.displayTime(endTime);
       }, 1000);
     }
@@ -86,9 +93,9 @@ module.exports = function(io, signal_room, breakLength, interval) {
       
       io.in(signal_room).emit('setTime', `${minutes}:${seconds}`)
       
-      if (this._timeLeft <= 0 && this._tick) {
-        clearInterval(this._tick);
-        this._tick = null;
+      if (this._timeLeft <= 0 && interval) {
+        clearInterval(interval);
+        interval = null;
         this._timeLeft = null;
       }
     }
@@ -104,5 +111,5 @@ module.exports = function(io, signal_room, breakLength, interval) {
     }
   }
 
-  return new Countdown(interval);
+  return new Countdown(length);
 }

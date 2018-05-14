@@ -99,6 +99,9 @@ module.exports = function(app, io) {
       // Setup pomodoro system now that in videochat
       room.pomodoro = require('../helpers/countdown')(io, signal_room, room.breakLength, 25); 
 
+      // room.pomodoro = require('../helpers/countdown')(); 
+      
+
       // TODO upon leaving chatroom, leave ALL rooms!!
       socket.in(roomId).emit('call started');
       io.in(roomId).emit('update inCall count', room.inCall);            
@@ -196,8 +199,12 @@ module.exports = function(app, io) {
       }
     },
     function(req, res) {
-      console.log("App Rooms: " + JSON.stringify(app.get('rooms')));
-    
+      console.log("App Rooms: " + JSON.stringify(app.get('rooms'), function(key, value) {
+        console.log(`${key}: ${value}`);
+        // return (key == 'pomodoro') ? undefined: value;
+        return value;
+      }));
+
       res.render('room', { id: req.params.id , name: req.room.name });
   });
 
