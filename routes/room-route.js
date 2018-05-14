@@ -145,6 +145,8 @@ module.exports = function(app, io) {
     }
 
     socket.on('pomodoro', function(action, ...args) {
+      if (!room.pomodoro) return;
+
       if (args) {
         room.pomodoro[action](...args);        
       } else {

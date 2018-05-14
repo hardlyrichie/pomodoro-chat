@@ -28,11 +28,14 @@ body {
 .heading-primary {
   font-size: 6rem;
   text-transform: uppercase;
-  color: transparent;
-  background-image: linear-gradient(to bottom right, #ffb900, #FF6107);
-  -webkit-background-clip: text;
-  background-clip: text;
+  color: #FF6107;
   letter-spacing: 2.5rem; }
+  @supports not (-moz-appearance: none) {
+    .heading-primary {
+      color: transparent;
+      background-image: linear-gradient(to bottom right, #ffb900, #FF6107);
+      -webkit-background-clip: text;
+      background-clip: text; } }
 
 .heading-secondary {
   font-size: 2.5rem;

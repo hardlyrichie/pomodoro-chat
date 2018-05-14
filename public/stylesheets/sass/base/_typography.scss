@@ -7,11 +7,16 @@ body {
 .heading-primary {
   font-size: 6rem;  
   text-transform: uppercase;
-  color: transparent;
-  background-image: linear-gradient(to bottom right, $color-primary-light, $color-primary);
-  -webkit-background-clip: text;
-  background-clip: text;
+  color: $color-primary;
   letter-spacing: 2.5rem;
+
+  // Timer breaks for firefox because of background-clip
+  @supports (not (-moz-appearance: none)) {
+    color: transparent;
+    background-image: linear-gradient(to bottom right, $color-primary-light, $color-primary);
+    -webkit-background-clip: text;
+    background-clip: text;
+  }
 }
 
 .heading-secondary {

@@ -160,7 +160,7 @@ function startSignaling(isInitiator, id) {
   remoteVideo[id].className = 'videoArea__remoteVideo';
   remoteVideo[id].autoplay = true;
 
-  remoteVideo[id].muted = true;
+  // remoteVideo[id].muted = true;
 }
 
 function displayVideo() {
