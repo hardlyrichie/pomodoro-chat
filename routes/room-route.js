@@ -107,9 +107,13 @@ module.exports = function(app, io) {
     socket.on('join call', function() {
       socket.join(room.SIGNAL_ROOM);
 
+      socket.emit('display label', room.pomodoro.type);
       if (room.pomodoro.isCounting) {
-        socket.emit('setTime', room.pomodoro.timeLeft);
-        socket.emit('display label', room.pomodoro.type);
+        socket.emit('setTime', room.pomodoro.timeLeft);          
+      } else {
+        // Room is currently showing break options
+        socket.emit('toggle break');
+        socket.emit('setTime', '00:00');
       }
 
       // Inform all other clients in signal_room to start a peer connection with this client(socket.id)
@@ -140,8 +144,12 @@ module.exports = function(app, io) {
       io.in(roomId).emit('update inCall count', --room.inCall);            
     }
 
-    socket.on('pomodoro', function(action) {
-      room.pomodoro[action]();        
+    socket.on('pomodoro', function(action, ...args) {
+      if (args) {
+        room.pomodoro[action](...args);        
+      } else {
+        room.pomodoro[action]();        
+      }
     });
 
   });

@@ -34,6 +34,12 @@ module.exports = function(io, signal_room, settings) {
     }
   
     start() {
+      // Start new session after break
+      if (arguments[0] === 'new') {
+        this.length = settings.session;
+        io.in(signal_room).emit('change start text', 'Start');
+      }
+
       this._timeLeft ? this.countdown(this._timeLeft) : this.countdown(this._length * 60); // converts length from minutes to seconds  
     }
   
@@ -69,7 +75,7 @@ module.exports = function(io, signal_room, settings) {
     break() {
       this.clearTimer();
       this.start();
-
+      
       // Tell clients to hide break buttons
       io.in(signal_room).emit('toggle break');
     }
@@ -99,6 +105,9 @@ module.exports = function(io, signal_room, settings) {
 
       // Display pomodoro label (type of countdown next to timer: session or break)
       io.in(signal_room).emit('display label', this.type);   
+
+      // Counting down means buttons should be clickable, Re-enable buttons
+      io.in(signal_room).emit('renable buttons');
     }
   
     // endTime in milliseconds
@@ -107,9 +116,7 @@ module.exports = function(io, signal_room, settings) {
       this._timeLeft = ((endTime - Date.now() + 100) / 1000) | 0;
 
       let time = this.buildTime(this.formatTime(this._timeLeft));
-      
-      io.in(signal_room).emit('setTime', time);
-      
+
       if (this._timeLeft <= 0 && interval) {
         clearInterval(interval);
         interval = null;
@@ -120,9 +127,11 @@ module.exports = function(io, signal_room, settings) {
           io.in(signal_room).emit('toggle break');        
         } else {
           // New pomo session
-          this.length = settings.session;
+          io.in(signal_room).emit('change start text', 'New Session?');
         }
       }
+      
+      io.in(signal_room).emit('setTime', time);
     }
 
     // time in seconds
