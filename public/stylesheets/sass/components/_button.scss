@@ -139,6 +139,12 @@
     border: 0;
   }
 
+  &:disabled:hover {
+    transform: translateY(0);
+    box-shadow: none;
+    background: $color-grey-light;    
+  }
+
   &--green {
     background-color: $color-green;
   }
@@ -176,5 +182,10 @@
   &:active,
   &:focus {
     outline: none; 
+  }
+
+  &:disabled:hover {
+    transform: translateY(0);
+    box-shadow: none;    
   }
 }

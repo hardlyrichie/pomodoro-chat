@@ -175,6 +175,11 @@ body {
 .btn-circle::-moz-focus-inner {
   border: 0; }
 
+.btn-circle:disabled:hover {
+  transform: translateY(0);
+  box-shadow: none;
+  background: #f7f7f7; }
+
 .btn-circle--green {
   background-color: #50c878; }
 
@@ -202,6 +207,10 @@ body {
 
 .btn-rect:active, .btn-rect:focus {
   outline: none; }
+
+.btn-rect:disabled:hover {
+  transform: translateY(0);
+  box-shadow: none; }
 
 .form {
   padding: 5rem;
@@ -361,9 +370,13 @@ video {
     margin-left: 5rem; }
 
 .buttonGroup {
-  grid-area: buttonGroup; }
+  grid-area: buttonGroup;
+  text-align: center; }
   .buttonGroup > * {
     margin: 1rem auto; }
+
+.inCall {
+  font-size: 1.5rem; }
 
 .messageArea {
   grid-area: messageArea; }

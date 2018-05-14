@@ -47,7 +47,7 @@ hangupButton.onclick = function() {
 // Join video call
 socket.on('call started', function() {
   console.log('call started');
-  callButton.innerText = 'Join Call';
+  callButton.innerHTML = 'Join Call';
   startCall = false;
 });
 
@@ -275,16 +275,18 @@ muteButton.onclick = function() {
   }
 };
 
-// socket.on('update inCall count', function(count) {
-//   // Limit video call to 5 clients
-//   if (count > 5) {
-//     console.log('disabling button');
-//     callButton.disabled = true;
-//   } else {
-//     console.log('not disabling button');    
-//     callButton.disabled = false;
-//   }
+socket.on('update inCall count', function(count) {
+  // Limit video call to 5 clients
+  if (count >= 5) {
+    console.log('disabling button');
+    callButton.disabled = true;
+    callButton.innerHTML = 'Call Full';
+  } else {
+    console.log('not disabling button');    
+    callButton.disabled = false;
+    callButton.innerHTML = 'Join Call';
+  }
 
-//   let countDisplay = document.querySelector('.inCall');
-//   countDisplay.innerHTML = `<strong>${count}</strong>`; 
-// });
+  let countDisplay = document.querySelector('.inCall');
+  countDisplay.textContent = `In Call: ${count}`; 
+});

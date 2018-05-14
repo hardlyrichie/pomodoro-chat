@@ -21,10 +21,15 @@
 
 .buttonGroup {
   grid-area: buttonGroup;
+  text-align: center;
 
   & > * {
     margin: 1rem auto;
   }
+}
+
+.inCall {
+  font-size: 1.5rem;
 }
 
 .messageArea {

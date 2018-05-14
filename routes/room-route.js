@@ -29,7 +29,7 @@ module.exports = function(app, io) {
       // Inform client that room is already in video call
       if (room.inCall) {
         socket.emit('call started');
-        io.in(roomId).emit('update inCall count', room.inCall);
+        socket.emit('update inCall count', room.inCall);
       }
 
       io.in('lobby').emit('update users in room', roomId, room.users.length);                  
