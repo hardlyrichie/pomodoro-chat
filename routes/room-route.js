@@ -110,7 +110,7 @@ module.exports = function(app, io) {
       socket.emit('display label', room.pomodoro.type);
       if (room.pomodoro.isCounting) {
         socket.emit('setTime', room.pomodoro.timeLeft);          
-      } else {
+      } else if(room.pomodoro.showBreak) {
         // Room is currently showing break options
         socket.emit('toggle break');
         socket.emit('setTime', '00:00');

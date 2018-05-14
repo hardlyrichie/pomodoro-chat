@@ -8,6 +8,7 @@ module.exports = function(io, signal_room, settings) {
     constructor() {
       this._timeLeft; // in seconds
       this._length = settings.session; // length of session or break in minutes
+      this._showBreak = false;
 
       console.log('Initialize ' + signal_room + ' countdown');
     }
@@ -27,6 +28,14 @@ module.exports = function(io, signal_room, settings) {
 
     get isCounting() {
       return interval ? true : false;
+    }
+
+    get showBreak() {
+      return this._showBreak;
+    }
+  
+    set showBreak(showBreak) {
+      this._showBreak = showBreak;
     }
 
     get type() {
@@ -78,6 +87,7 @@ module.exports = function(io, signal_room, settings) {
       
       // Tell clients to hide break buttons
       io.in(signal_room).emit('toggle break');
+      this._showBreak = false;
     }
   
     clearTimer() {
@@ -124,7 +134,8 @@ module.exports = function(io, signal_room, settings) {
 
         // Display break options if pomo session just ended
         if (this._length === settings.session) {
-          io.in(signal_room).emit('toggle break');        
+          io.in(signal_room).emit('toggle break');
+          this._showBreak = true;        
         } else {
           // New pomo session
           io.in(signal_room).emit('change start text', 'New Session?');

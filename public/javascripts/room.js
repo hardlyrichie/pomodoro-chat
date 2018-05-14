@@ -62,7 +62,7 @@ socket.on('message', function(user, message, id) {
   }
 
   // Message Flash Icon in video call state
-  if (messageArea.classList.contains('hiddenMessage') && !messageArea.classList.contains('show')) {
+  if (messageArea.classList.contains('hiddenMessage') && !messageArea.classList.contains('showMessage')) {
     showChat.classList.add('notification');
   } else {
     // TODO Alert Sound
