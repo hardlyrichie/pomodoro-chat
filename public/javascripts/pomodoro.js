@@ -37,6 +37,8 @@ socket.on('setTime', function(time) {
     // Disable reset when options are visible
     reset.disabled = true;
   }
+
+  // Show 5 seconds countdown animation
 });
 
 socket.on('toggle break', function() {

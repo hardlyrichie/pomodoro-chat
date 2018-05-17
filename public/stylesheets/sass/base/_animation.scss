@@ -9,3 +9,13 @@
     box-shadow: 0 1rem 2rem rgba($color-black, .2);
   }
 }
+
+@keyframes spin {
+  0% {
+    transform: translate(-50%, -50%) rotate(0);
+  }
+
+  100% {
+    transform: translate(-50%, -50%) rotate(360deg);
+  }
+}

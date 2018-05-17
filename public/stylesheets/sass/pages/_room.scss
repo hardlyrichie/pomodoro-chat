@@ -157,3 +157,12 @@
   animation: notify .5s cubic-bezier(.45,.06,0,1.39) 6 alternate;
 }
 
+.loading {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 10rem;
+  height: 10rem;
+  animation: spin 1s cubic-bezier(.27,.12,.27,1) infinite;
+}
