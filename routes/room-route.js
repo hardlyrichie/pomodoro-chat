@@ -12,7 +12,7 @@ module.exports = function(app, io) {
     socket.on('join room', function(id) {
       roomId = id;
       room = app.get('rooms')[roomId];
-      if (!room) return;
+      if (checkMissingRoom()) return;
 
       socket.join(id);
 
@@ -38,7 +38,7 @@ module.exports = function(app, io) {
 
     // Leave room
     socket.on('disconnecting', function() {
-      if (!room) return;
+      if (checkMissingRoom()) return;
 
       console.log(socket.handshake.session.nickname + " has left room " + room.name);
 
@@ -86,7 +86,7 @@ module.exports = function(app, io) {
     // Initiator joins WebRTC signaling room and informs everyone in chatroom of video call
     socket.on('start call', function(signal_room) {
       // Check if call has not already been started
-      if (!room || room.inCall) return;
+      if (checkMissingRoom() || room.inCall) return;
 
       room.inCall = 1;
 
@@ -145,7 +145,8 @@ module.exports = function(app, io) {
     }
 
     socket.on('pomodoro', function(action, ...args) {
-      if (!room.pomodoro) return;
+
+      if (checkMissingRoom() && !room.pomodoro) return;
 
       if (args) {
         room.pomodoro[action](...args);        
@@ -153,6 +154,15 @@ module.exports = function(app, io) {
         room.pomodoro[action]();        
       }
     });
+
+    function checkMissingRoom() {
+      if (!room) {
+        io.in(roomId).emit('missing room');
+        return true;
+      }
+
+      return false;
+    }
 
   });
 

@@ -263,7 +263,6 @@ muteButton.onclick = function() {
   for (let pc of Object.values(pcs)) {
     let streams = pc.getLocalStreams();
     getStream:
-
     //something wrong here
     for (let stream of streams) {
       for (let audioTrack of stream.getAudioTracks()) {

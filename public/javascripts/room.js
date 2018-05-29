@@ -148,5 +148,8 @@ function debounce(f, ms) {
 
     setTimeout(() => isCooldown = false, ms);
   };
-
 }
+
+socket.on('missing room', function() {
+  window.location = '/room/error?reason=room_deleted';
+});
