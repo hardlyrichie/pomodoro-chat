@@ -240,20 +240,19 @@ function logError(err) {
 }
 
 // ------------Buttons and other stuff--------------
-// TODO refactor with browserify
-
 hideVideoButton.onclick = function() {
   console.log('Pausing/Unpausing');
   // Loop through all peer connections and enable/disable the first videotrack of the first stream
   for (let pc of Object.values(pcs)) {
-    let streams = pc.getLocalStreams();
-    getStream:
-    for (let stream of streams) {
-      for (let videoTrack of stream.getVideoTracks()) {
-        hideVideoButton.innerHTML = videoTrack.enabled ? '<i class=ion-eye-disabled></i>' : '<i class=ion-eye></i>';
-        videoTrack.enabled = !videoTrack.enabled;
-        break getStream;
-      }
+    let senders = pc.getSenders();
+    getVideo:
+    for (let sender of senders) {
+      let videoTrack = sender.track;
+      if (videoTrack.kind !== 'video') continue;
+
+      hideVideoButton.innerHTML = videoTrack.enabled ? '<i class=ion-eye-disabled></i>' : '<i class=ion-eye></i>';
+      videoTrack.enabled = !videoTrack.enabled;
+      break getVideo;
     }
   }
 };
@@ -261,15 +260,15 @@ hideVideoButton.onclick = function() {
 muteButton.onclick = function() {
   console.log('Muting/Unmuting');
   for (let pc of Object.values(pcs)) {
-    let streams = pc.getLocalStreams();
-    getStream:
-    //something wrong here
-    for (let stream of streams) {
-      for (let audioTrack of stream.getAudioTracks()) {
-        muteButton.innerHTML = audioTrack.enabled ? '<i class=ion-android-microphone-off></i>' : '<i class=ion-android-microphone></i>';
-        audioTrack.enabled = !audioTrack.enabled;
-        break getStream;        
-      }
+    let senders = pc.getSenders();
+    getAudio:
+    for (let sender of senders) {
+      let audioTrack = sender.track;
+      if (audioTrack.kind !== 'audio') continue;
+
+      muteButton.innerHTML = audioTrack.enabled ? '<i class=ion-android-microphone-off></i>' : '<i class=ion-android-microphone></i>';
+      audioTrack.enabled = !audioTrack.enabled;
+      break getAudio;        
     }
   }
 };
