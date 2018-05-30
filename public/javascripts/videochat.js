@@ -160,6 +160,26 @@ function startSignaling(isInitiator, id) {
   remoteVideo[id].className = 'videoArea__remoteVideo';
   remoteVideo[id].autoplay = true;
 
+  // Pause or mute new stream
+  if (Object.keys(pcs).length > 1) {
+    const paused = hideVideoButton.innerHTML === '<i class=ion-eye-disabled></i>';
+    const muted = muteButton.innerHTML === '<i class=ion-android-microphone-off></i>';
+
+    let senders = pcs[id].getSenders();
+    for (let sender of senders) {
+      let track = sender.track;
+      if (track.kind === 'video') {
+        if (paused) {
+          track.enabled = false;
+        }
+      } else if (track.kind === 'audio') {
+        if (muted) {
+          track.enabled = false;
+        }
+      }
+    }
+  }
+
   // remoteVideo[id].muted = true;
 }
 
