@@ -3,7 +3,11 @@ A peer-to-peer video chat application for studying using the pomodoro technique
 
 <https://pomodoro-chat.herokuapp.com/>
 
-<img src="./pomodoro.PNG" width="400">
+<img src="./pomodoro.PNG" width="700">
+
+# Built With
+* [Webrtc](https://webrtc.org/) - Real-Time Communications API used for peer connections and streaming
+* [Socket.io](https://socket.io/) - Signaling server
 
 # Todo
 * Refactor and concat javacript files
