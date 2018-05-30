@@ -40,6 +40,7 @@ socket.on('delete room user', function(name) {
 let chatBox = document.querySelector('.chatBox');
 let chat = document.querySelector('.chat');
 let chatInput = document.querySelector('.chatBox__input');
+let alert = document.querySelector('.alert');
 
 chatBox.onsubmit = function(event) {
   event.preventDefault();
@@ -64,8 +65,8 @@ socket.on('message', function(user, message, id) {
   // Message Flash Icon in video call state
   if (messageArea.classList.contains('hiddenMessage') && !messageArea.classList.contains('showMessage')) {
     showChat.classList.add('notification');
-  } else {
-    // TODO Alert Sound
+    alert.currentTime = 0;
+    alert.play();
   }
 
   // Check overflow

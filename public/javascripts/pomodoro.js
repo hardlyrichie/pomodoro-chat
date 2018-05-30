@@ -7,7 +7,7 @@ let reset = document.querySelector('[data-action=reset]');
 let breakButtons = document.querySelector('.pomodoro__break-buttons');
 let label = document.querySelector('.pomodoro__label');
 let timer = document.querySelector('.pomodoro__timer');
-let ring = document.querySelector('.ring');
+let alarm = document.querySelector('.alarm');
 
 pomodoro.onclick = function(event) {
   let action = event.target.dataset.action;
@@ -26,8 +26,8 @@ socket.on('setTime', function(time) {
   timer.textContent = time;
 
   if (time == '00:00') {
-    ring.currentTime = 0;
-    ring.play();
+    alarm.currentTime = 0;
+    alarm.play();
 
     // Disable start and reset button when break buttons are visible
     if (!breakButtons.classList.contains('visibility-hidden')) {
