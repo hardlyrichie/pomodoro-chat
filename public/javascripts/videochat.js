@@ -223,7 +223,9 @@ function handleGetUserMediaErrors(err) {
     window.location = '/room/error?reason=fail_constrains';
   } else if (err.name=="NotAllowedError" || err.name == "PermissionDeniedError" ){
     //permission denied in browser
-    // TODO DISPLAY Permisson denied message
+    let deniedMessage = document.createElement('h1');
+    deniedMessage.textContent = 'Camera or microphone permission denied';
+    videoArea.appendChild(deniedMessage);
   } else if (err.name=="TypeError" || err.name == "TypeError" ){
     //empty constraints object
     window.location = '/room/error?reason=empty_constraints';       
