@@ -10,6 +10,7 @@ A peer-to-peer video chat application for studying using the pomodoro technique
 * [Socket.io](https://socket.io/) - Signaling server
 
 # Todo
+* Update sass to support moblie with media queries
 * Refactor and concat javacript files
 * Rework file structure 
 
