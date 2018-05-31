@@ -109,8 +109,6 @@ function startSignaling(isInitiator, id) {
 
   pcs[id] = new RTCPeerConnection(configuration);
 
-  console.log("Peer Connection Object Start Signalling: " + JSON.stringify(pcs));
-
   // send any ice candidates to the other peer
   pcs[id].onicecandidate = function(event) {
     if (event.candidate) {
@@ -180,7 +178,7 @@ function startSignaling(isInitiator, id) {
     }
   }
 
-  // remoteVideo[id].muted = true;
+  remoteVideo[id].muted = true;
 }
 
 function displayVideo() {
@@ -274,6 +272,8 @@ hideVideoButton.onclick = function() {
 
       hideVideoButton.innerHTML = videoTrack.enabled ? '<i class=ion-eye-disabled></i>' : '<i class=ion-eye></i>';
       videoTrack.enabled = !videoTrack.enabled;
+      console.count('pausing video');
+      console.log(videoTrack);
       break getVideo;
     }
   }
