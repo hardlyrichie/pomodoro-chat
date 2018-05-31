@@ -178,7 +178,7 @@ function startSignaling(isInitiator, id) {
     }
   }
 
-  remoteVideo[id].muted = true;
+  // remoteVideo[id].muted = true;
 }
 
 function displayVideo() {
@@ -263,17 +263,15 @@ function logError(err) {
 hideVideoButton.onclick = function() {
   console.log('Pausing/Unpausing');
   // Loop through all peer connections and enable/disable the first videotrack of the first stream
+  getVideo:
   for (let pc of Object.values(pcs)) {
     let senders = pc.getSenders();
-    getVideo:
     for (let sender of senders) {
       let videoTrack = sender.track;
       if (videoTrack.kind !== 'video') continue;
 
       hideVideoButton.innerHTML = videoTrack.enabled ? '<i class=ion-eye-disabled></i>' : '<i class=ion-eye></i>';
       videoTrack.enabled = !videoTrack.enabled;
-      console.count('pausing video');
-      console.log(videoTrack);
       break getVideo;
     }
   }
@@ -281,9 +279,9 @@ hideVideoButton.onclick = function() {
 
 muteButton.onclick = function() {
   console.log('Muting/Unmuting');
+  getAudio:
   for (let pc of Object.values(pcs)) {
     let senders = pc.getSenders();
-    getAudio:
     for (let sender of senders) {
       let audioTrack = sender.track;
       if (audioTrack.kind !== 'audio') continue;
