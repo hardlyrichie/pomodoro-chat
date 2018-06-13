@@ -12,7 +12,8 @@ A peer-to-peer video chat application for studying using the pomodoro technique
 # Todo
 * Update sass to support moblie with media queries
 * Refactor and concat javacript files
-* Rework file structure 
+* Rework file structure
+* Create image when image link is posted in chat 
 
 # Acknowledgments
 This applicaiton uses these sounds from freesound:

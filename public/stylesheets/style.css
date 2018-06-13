@@ -323,9 +323,11 @@ body {
   transform: translate(-50%, -50%); }
 
 video {
-  transform: rotateY(180deg);
   width: 100%;
   max-height: 100%; }
+
+.videoArea__localVideo {
+  transform: rotateY(180deg); }
 
 .page-padding {
   padding: 3rem; }
