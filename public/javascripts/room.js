@@ -51,10 +51,16 @@ chatBox.onsubmit = function(event) {
   chatInput.value = '';
 }
 
+const urlPattern = /\b(https?:\/\/)?([\da-z\.-]+)\.([a-z\.]{2,6})([\/\w\.-]*)*\/?\b/g;
+
 socket.on('message', function(user, message, id) {
   let date = moment().calendar();  
 
   let atBottom = (chat.scrollTop + chat.clientHeight) >= chat.scrollHeight;
+
+  // Display part of message as anchor if is url
+  message = message.replace(urlPattern, '<a href=$& target=_blank>$&</a>');
+
 
   if (chat.lastElementChild && chat.lastElementChild.className == id) {
     chat.lastElementChild.innerHTML = `${chat.lastElementChild.innerHTML}<br><span style='padding: 1rem; display: inline-block;'>${message}</span>`;    
